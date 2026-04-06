@@ -5,7 +5,8 @@ from classes.item import MAX_NAME, MAX_CAT
 
 class ErrorChecking:
     # Currently built:
-    # id_nop, name_nop, price_nop
+    # id_nop, name_nop, price_nop, category_nop, quantity_nop
+    # name_op, price_op, category_op
 
     # Not Optional
     @staticmethod
@@ -104,6 +105,46 @@ class ErrorChecking:
         
         return num_errors
     
+    @staticmethod
+    def check_change_nop(change: str, errors_change: List[str]) -> int:
+        strip_change = change.strip()
+        num_errors = 0
+
+        if not strip_change:
+            errors_change.append("Change field can not be empty.")
+            num_errors += 1
+        else:
+            try:
+                int_change = int(strip_change)
+                if int_change < 0:
+                    errors_change.append("Change can not be negative.")
+                    num_errors += 1
+            except ValueError:
+                errors_change.append("Change must be an integer.")
+                num_errors += 1
+
+        return num_errors
+    
+    @staticmethod
+    def check_threshold_nop(threshold: str, errors_threshold: List[str]) -> int:
+        strip_threshold = threshold.strip()
+        num_errors = 0
+
+        if not threshold:
+            errors_threshold.append("Threshold field can not be empty.")
+            num_errors += 1
+        else:
+            try:
+                int_threshold = int(strip_threshold)
+                if int_threshold < 0:
+                    errors_threshold.append("Threshold can not be negative.")
+                    num_errors += 1
+            except ValueError:
+                errors_threshold.append("Threshold must be an integer.")
+                num_errors += 1
+
+        return num_errors
+    
     # Optional
     @staticmethod
     def check_name_op(name: str, errors_name: List[str]) -> int:
@@ -151,3 +192,20 @@ class ErrorChecking:
                 num_errors += 1
 
         return num_errors
+    
+    # Additional
+    @staticmethod
+    def check_item_main_inventory(item: Item, int_id: int, errors_id: List[str]) -> int:
+        num_errors = 0
+
+        if item is None:
+            errors_id.append(f"Item {int_id} does not exist.")
+            num_errors += 1
+        elif item.main_inventory is None:
+            errors_id.append(f"Item {int_id} does not exist in main inventory.")
+            num_errors += 1
+
+        return num_errors
+    
+    @staticmethod
+    def check_item_vm_inventory(item: Item, )

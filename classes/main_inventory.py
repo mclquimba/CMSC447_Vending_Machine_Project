@@ -2,6 +2,9 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from classes.base import Base
 
+DEFAULT_QUANTITY = 0
+DEFAULT_THRESH = 10
+
 class MainInventory(Base):
     __tablename__ = "main_inventory"
     id: Mapped[int] = mapped_column(primary_key=True)
