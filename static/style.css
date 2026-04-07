@@ -37,6 +37,12 @@ background-color:#e6ffe6;
 background-color:#ffcccc;
 }
 
+summary{
+    table-colors: #000000
+	Row-colors: #000080
+	
+
+}
 
 tr:nth-child(even) {
     background-color: #f9f9f9;

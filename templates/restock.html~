@@ -11,9 +11,8 @@ A<!DOCTYPE html>
     <section>
       <h2> Needs Restocking</h2>
 
-      <table border = "1">
-	<table text = "summary">
-	  
+      <table class = "summary">
+	<table border = "1">
 	<tr>
 	  <th>Slot</th>
 	  <th>Item</th>
