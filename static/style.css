@@ -1,0 +1,43 @@
+
+    text-align: center;
+}
+
+body {
+    font-family: Arial;
+}
+
+table {
+    border-collapse: collapse;
+    width: 60%;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 8px;
+ 
+}
+
+th {
+    background-color: #eeeeee;
+}
+
+section {
+    margin-bottom: 30px;
+}
+
+.low{
+background-color:#ffe6e6;
+}
+
+.good{
+background-color:#e6ffe6;
+}
+
+.out{
+background-color:#ffcccc;
+}
+
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
