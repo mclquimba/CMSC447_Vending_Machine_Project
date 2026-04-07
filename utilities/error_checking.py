@@ -2,6 +2,7 @@ from typing import List
 from decimal import Decimal, InvalidOperation
 
 from classes.item import MAX_NAME, MAX_CAT
+from seed import SLOT_VALUES
 
 class ErrorChecking:
     # Currently built:
@@ -130,7 +131,7 @@ class ErrorChecking:
         strip_threshold = threshold.strip()
         num_errors = 0
 
-        if not threshold:
+        if not strip_threshold:
             errors_threshold.append("Threshold field can not be empty.")
             num_errors += 1
         else:
@@ -144,6 +145,20 @@ class ErrorChecking:
                 num_errors += 1
 
         return num_errors
+    
+    @staticmethod
+    def check_slot_value_nop(value: str, errors_value: List[str]) -> int:
+        strip_value = value.strip().upper()
+        num_errors = 0
+        
+        if not strip_value:
+            errors_value.append("Slot Value field can not be empty.")
+            num_errors += 1
+        elif strip_value not in SLOT_VALUES:
+            errors_value.append(f"{strip_value} not in {", ".join(SLOT_VALUES)}.")
+            num_errors += 1
+        
+        return num_errors     
     
     # Optional
     @staticmethod
@@ -208,4 +223,14 @@ class ErrorChecking:
         return num_errors
     
     @staticmethod
-    def check_item_vm_inventory(item: Item, )
+    def check_item_vm_inventory(item: Item, int_id: int,, errors_id: List[str]) -> int:
+        num_errors = 0
+        
+        if item is None:
+            errors_id.append(f"Item {int_id} does not exist.")
+            num_errors += 1
+        elif not item.vending_machine_slots:
+            errors_id.append(f"Item {int_id} is not in the vending machine.")
+            num_errors += 1
+        
+        return num_errors

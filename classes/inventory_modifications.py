@@ -18,11 +18,12 @@ class Modification(Base):
     __tablename__ = "modifications"
     id: Mapped[int] = mapped_column(primary_key=True)
     slot_id: Mapped[Optional[int]] = mapped_column(ForeignKey("vending_machine_slots.id", ondelete="SET NULL"), nullable=True)
-    item_id: Mapped[Optional[int]] = mapped_column(ForeignKey("items.id", ondelete="SET NULL"), nullable=False)
+    item_id: Mapped[int] = mapped_column(ForeignKey("items.id", ondelete="SET NULL"), nullable=False)
     source: Mapped[ModSource] =  mapped_column(Enum(ModSource), nullable=False)
     mod_type: Mapped[ModType] = mapped_column(Enum(ModType), nullable=False)
-    quantity_change: Mapped[int] = mapped_column()
+    quantity_start: Mapped[int] = mapped_column()
     quantity_final: Mapped[int] = mapped_column()
+    threshold: Mapped[int] = mapped_column(nullable=False)
     time: Mapped[datetime] = mapped_column(default=lambda: datetime.now(timezone.utc), nullable=False)
 
     vending_machine_slot: Mapped[Optional["VendingMachineSlot"]] = relationship(back_populates="modifications", passive_deletes=True)

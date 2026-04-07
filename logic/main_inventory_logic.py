@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from classes.item import Item
 from classes.main_inventory import MainInventory
+from classes.inventory_modifications import Modification, ModSource, ModType
 from utilities.error_checking import ErrorChecking as check
 
 def add_stock(session: Session, id: str, quantity: str, threshold: str) -> MainInventory:
@@ -39,6 +40,9 @@ def add_stock(session: Session, id: str, quantity: str, threshold: str) -> MainI
     else:
         raise ValueError({"id": [f"Item {int_id} already exists in the main inventory."]})
 
+    mod = Modification(slot_id=None, item_id=int_id, source=ModSource.MAIN_INVENTORY, mod_type=ModType.MANUAL, quantity_start=int_quantity, quantity_final=int_quantity, threshold=int_threshold)
+
+    session.add(mod)
     session.flush()
     
     return item.main_inventory
@@ -102,8 +106,13 @@ def restock(session: Session, id: str, change: str) -> MainInventory:
         errors["id"] = errors_id
         raise ValueError(errors)
     
-    item.main_inventory.quantity += int_change
+    start_quantity = item.main_inventory.quantity
+    final_quantity = item.main_inventory.quantity + int_change
+    item.main_inventory.quantity = final_quantity
 
+    mod = Modification(slot_id=None, item_id=int_id, source=ModSource.MAIN_INVENTORY, mod_type=ModType.RESTOCK, quantity_start=start_quantity, quantity_final=final_quantity, threshold=item.main_inventory.low_stock_threshold)
+
+    session.add(mod)
     session.flush()
     return item
 
@@ -134,8 +143,12 @@ def modify_stock(session: Session, id: str, quantity: str) -> MainInventory:
         errors["id"] = errors_id
         raise ValueError(errors)
     
+    start_quantity = item.main_inventory.quantity
     item.main_inventory.quantity = int_quantity
+
+    mod = Modification(slot_id=None, item_id=int_id, source=ModSource.MAIN_INVENTORY, mod_type=ModType.MANUAL, quantity_start=start_quantity, quantity_final=int_quantity, threshold=item.main_inventory.low_stock_threshold)
     
+    session.add(mod)
     session.flush()
     return item
 
@@ -168,6 +181,9 @@ def modify_threshold(session: Session, id: str, threshold: str) -> MainInventory
     
     item.main_inventory.low_stock_threshold = int_threshold
 
+    mod = Modification(slot_id=None, item_id=int_id, source=ModSource.MAIN_INVENTORY, mod_type=ModType.MANUAL, quantity_start=item.main_inventory.quantity, quantity_final=item.main_invetory.quantity, threshold=int_threshold)
+
+    session.add(mod)
     session.flush()
     return item
 
@@ -178,7 +194,7 @@ def check_low_stock(session: Session) -> list[dict]:
             "id": low_stock_item.item_id,
             "name": low_stock_item.item.name,
             "quantity": low_stock_item.quantity,
-            "threshold": low_stock_item.threshold
+            "threshold": low_stock_item.low_stock_threshold
         }
         for low_stock_item in low_stock_items
     ]
