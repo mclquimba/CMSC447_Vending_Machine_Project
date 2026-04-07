@@ -1,7 +1,7 @@
-from typing import List
+from typing import List, Optional
 from decimal import Decimal, InvalidOperation
 
-from classes.item import MAX_NAME, MAX_CAT
+from classes.item import Item, MAX_NAME, MAX_CAT
 from seed import SLOT_VALUES
 
 class ErrorChecking:
@@ -210,7 +210,7 @@ class ErrorChecking:
     
     # Additional
     @staticmethod
-    def check_item_main_inventory(item: Item, int_id: int, errors_id: List[str]) -> int:
+    def check_item_main_inventory(item: Optional[Item], int_id: int, errors_id: List[str]) -> int:
         num_errors = 0
 
         if item is None:
@@ -223,7 +223,7 @@ class ErrorChecking:
         return num_errors
     
     @staticmethod
-    def check_item_vm_inventory(item: Item, int_id: int,, errors_id: List[str]) -> int:
+    def check_item_vm_inventory(item: Optional[Item], int_id: int, errors_id: List[str]) -> int:
         num_errors = 0
         
         if item is None:

@@ -36,7 +36,7 @@ def add_stock(session: Session, id: str, quantity: str, threshold: str) -> MainI
         raise ValueError({"id": [f"Item {int_id} not found."]})
     
     if item.main_inventory is None:
-        item.main_inventory = MainInventory(item_id=int_id, quantity=int_quantity, threshold=int_threshold)
+        item.main_inventory = MainInventory(item_id=int_id, quantity=int_quantity, low_stock_threshold=int_threshold)
     else:
         raise ValueError({"id": [f"Item {int_id} already exists in the main inventory."]})
 
@@ -67,6 +67,26 @@ def get_stock(session: Session, id: str) -> MainInventory:
         raise ValueError(errors)
     
     return item.main_inventory
+
+def get_stock_name(session: Session, name: str) -> MainInventory:
+    errors = {}
+    errors_name = []
+
+    strip_name = name.strip()
+
+    check.check_name_nop(strip_name, errors_name)
+    if errors_name:
+        errors["name"] = errors_name
+        raise ValueError(errors)
+    
+    query = select(MainInventory).join(Item).where(Item.name == strip_name)
+    inv = session.scalars(query).first()
+    if inv is None:
+        errors_name.append(f"{inv} not found in main inventory.")
+        errors["name"] = errors_name
+        raise ValueError(errors)
+    
+    return inv
 
 def list_low_stock(session: Session) -> list[MainInventory]:
     query = select(MainInventory).join(Item).order_by(Item.name).where(MainInventory.quantity < MainInventory.low_stock_threshold)

@@ -17,4 +17,4 @@ db_url = f"{db}+{driver}://{username}:{password}@{host}:{port}/{name}"
 
 engine = create_engine(db_url, echo=True)
 
-Session = sessionmaker(bind=engine)
+Session = sessionmaker(bind=engine, autoflush=False, autocommit=False)

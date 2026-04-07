@@ -54,6 +54,27 @@ def get_item(session: Session, id: str) -> Item:
     
     return item
 
+def get_item_name(session: Session, name: str) -> Item:
+    errors = {}
+    errors_name = []
+
+    strip_name = name.strip()
+
+    check.check_name_nop(strip_name, errors_name)
+
+    if errors_name:
+        errors["name"] = errors_name
+        raise ValueError(errors)
+    
+    query = select(Item).where(Item.name == strip_name)
+    item = session.scalars(query).first()
+    if item is None:
+        errors_name.append(f"{strip_name} does not exist.")
+        errors["name"] = errors_name
+        raise ValueError(errors)
+    
+    return item
+
 def search_items(session: Session, string: str) -> list[Item]:
     query = select(Item).order_by(Item.name)
     if string:
