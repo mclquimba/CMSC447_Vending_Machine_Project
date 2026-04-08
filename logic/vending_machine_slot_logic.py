@@ -36,7 +36,8 @@ def assign_slot(session: Session, item_id: str, slot_value: str, quantity: str, 
     int_quantity = int(strip_quantity)
     int_threshold = int(strip_threshold)
 
-    new_item = session.get(Item, int_id)
+    query = select(Item).where(Item.id_num == int_id)
+    new_item = session.scalars(query).first()
     check.check_item_main_inventory(new_item, int_id, errors_id)
     if errors_id:
         errors["id"] = errors_id
@@ -62,24 +63,24 @@ def assign_slot(session: Session, item_id: str, slot_value: str, quantity: str, 
         final_quantity = start_quantity + slot.quantity
         old_item.main_inventory.quantity = final_quantity
 
-        old_to_main_inventory = Modification(slot_id=None, item_id=slot.item_id, source=ModSource.MAIN_INVENTORY, mod_type=ModType.MANUAL, quantity_start=start_quantity, quantity_final=final_quantity, threshold=old_item.main_inventory.low_stock_threshold)
+        old_to_main_inventory = Modification(slot_id=None, item_id=slot.item_id, id_num=slot.item.id_num, source=ModSource.MAIN_INVENTORY, mod_type=ModType.MANUAL, quantity_start=start_quantity, quantity_final=final_quantity, threshold=old_item.main_inventory.low_stock_threshold)
         session.add(old_to_main_inventory)
 
-        reset_vending_machine_slot = Modification(slot_id=slot.id, item_id=slot.item_id, source=ModSource.VM_SLOT, mod_type=ModType.MANUAL, quantity_start=slot.quantity, quantity_final=0, threshold=slot.low_stock_threshold)
+        reset_vending_machine_slot = Modification(slot_id=slot.id, item_id=slot.item_id, id_num=slot.item.id_num, source=ModSource.VM_SLOT, mod_type=ModType.MANUAL, quantity_start=slot.quantity, quantity_final=0, threshold=slot.low_stock_threshold)
         session.add(reset_vending_machine_slot)
 
     start_quantity = new_item.main_inventory.quantity
     final_quantity = start_quantity - int_quantity
     new_item.main_inventory.quantity = final_quantity
 
-    slot.item_id = int_id
+    slot.item_id = new_item.id
     slot.quantity = int_quantity
     slot.low_stock_threshold = int_threshold
 
-    new_to_vending_machine_slot = Modification(slot_id=slot.id, item_id=int_id, source=ModSource.VM_SLOT, mod_type=ModType.MANUAL, quantity_start=0, quantity_final=int_quantity, threshold=int_threshold)
+    new_to_vending_machine_slot = Modification(slot_id=slot.id, item_id=new_item.id, id_num=int_id, source=ModSource.VM_SLOT, mod_type=ModType.MANUAL, quantity_start=0, quantity_final=int_quantity, threshold=int_threshold)
     session.add(new_to_vending_machine_slot)
 
-    modify_main_inventory_item = Modification(slot_id=None, item_id=int_id, source=ModSource.MAIN_INVENTORY, mod_type=ModType.MANUAL, quantity_start=start_quantity, quantity_final=final_quantity, threshold=new_item.main_inventory.low_stock_threshold)
+    modify_main_inventory_item = Modification(slot_id=None, item_id=new_item.id, id_num=int_id, source=ModSource.MAIN_INVENTORY, mod_type=ModType.MANUAL, quantity_start=start_quantity, quantity_final=final_quantity, threshold=new_item.main_inventory.low_stock_threshold)
     session.add(modify_main_inventory_item)
 
     session.flush()
@@ -128,10 +129,10 @@ def unassign_slot(session: Session, slot_value: str) -> VendingMachineSlot:
     slot.item_id = None
     slot.quantity = 0
     
-    item_to_main_inventory = Modification(slot_id=None, item_id=item.id, source=ModSource.MAIN_INVENTORY, mod_type=ModType.MANUAL, quantity_start=start_quantity, quantity_final=final_quantity, threshold=item.main_inventory.low_stock_threshold)
+    item_to_main_inventory = Modification(slot_id=None, item_id=item.id, id_num=item.id_num, source=ModSource.MAIN_INVENTORY, mod_type=ModType.MANUAL, quantity_start=start_quantity, quantity_final=final_quantity, threshold=item.main_inventory.low_stock_threshold)
     session.add(item_to_main_inventory)
 
-    reset_vending_machine_slot = Modification(slot_id=slot.id, item_id=item.id, source=ModSource.VM_SLOT, mod_type=ModType.MANUAL, quantity_start=cur_slot_quantity, quantity_final=0, threshold=slot.low_stock_threshold)
+    reset_vending_machine_slot = Modification(slot_id=slot.id, item_id=item.id, id_num=item.id_num, source=ModSource.VM_SLOT, mod_type=ModType.MANUAL, quantity_start=cur_slot_quantity, quantity_final=0, threshold=slot.low_stock_threshold)
     session.add(reset_vending_machine_slot)
 
     session.flush()
@@ -168,7 +169,7 @@ def restock_slot(session: Session, slot_value: str, change: str) -> VendingMachi
         raise ValueError(errors)
     
     item = session.get(Item, slot.item_id)
-    check.check_item_main_inventory(item, item.id, errors_id)
+    check.check_item_main_inventory(item, item.id_num, errors_id)
     if errors_id:
         errors["id"] = errors_id
         raise ValueError(errors)
@@ -192,10 +193,10 @@ def restock_slot(session: Session, slot_value: str, change: str) -> VendingMachi
     item.main_inventory.quantity = final_quantity_main
     slot.quantity = final_quantity_slot
 
-    mod_inventory = Modification(slot_id=None, item_id=item.id, source=ModSource.MAIN_INVENTORY, mod_type=ModType.RESTOCK, quantity_start=start_quantity_main, quantity_final=final_quantity_main, threshold=item.main_inventory.low_stock_threshold)
+    mod_inventory = Modification(slot_id=None, item_id=item.id, id_num=item.id_num, source=ModSource.MAIN_INVENTORY, mod_type=ModType.RESTOCK, quantity_start=start_quantity_main, quantity_final=final_quantity_main, threshold=item.main_inventory.low_stock_threshold)
     session.add(mod_inventory)
 
-    mod_vending_machine = Modification(slot_id=slot.id, item_id=item.id, source=ModSource.VM_SLOT, mod_type=ModType.RESTOCK, quantity_start=start_quantity_slot, quantity_final=final_quantity_slot, threshold=slot.low_stock_threshold)
+    mod_vending_machine = Modification(slot_id=slot.id, item_id=item.id, id_num=item.id_num, source=ModSource.VM_SLOT, mod_type=ModType.RESTOCK, quantity_start=start_quantity_slot, quantity_final=final_quantity_slot, threshold=slot.low_stock_threshold)
     session.add(mod_vending_machine)
 
     session.flush()
@@ -236,7 +237,7 @@ def modify_slot_stock(session: Session, slot_value: str, quantity: str) -> Vendi
         raise ValueError(errors)
     
     item = session.get(Item, slot.item_id)
-    check.check_item_main_inventory(item, item.id, errors_id)
+    check.check_item_main_inventory(item, item.id_num, errors_id)
     if errors_id:
         errors["id"] = errors_id
         raise ValueError(errors)
@@ -255,10 +256,10 @@ def modify_slot_stock(session: Session, slot_value: str, quantity: str) -> Vendi
     item.main_inventory.quantity = final_quantity_main
     slot.quantity = final_quantity_slot
 
-    mod_inventory = Modification(slot_id=None, item_id=item.id, source=ModSource.MAIN_INVENTORY, mod_type=ModType.MANUAL, quantity_start=start_quantity_main, quantity_final=final_quantity_main, threshold=item.main_inventory.low_stock_threshold)
+    mod_inventory = Modification(slot_id=None, item_id=item.id, id_num=item.id_num, source=ModSource.MAIN_INVENTORY, mod_type=ModType.MANUAL, quantity_start=start_quantity_main, quantity_final=final_quantity_main, threshold=item.main_inventory.low_stock_threshold)
     session.add(mod_inventory)
 
-    mod_vending_machine = Modification(slot_id=slot.id, item_id=item.id, source=ModSource.VM_SLOT, mod_type=ModType.MANUAL, quantity_start= start_quantity_slot, quantity_final=final_quantity_slot, threshold=slot.low_stock_threshold)
+    mod_vending_machine = Modification(slot_id=slot.id, item_id=item.id, id_num=item.id_num, source=ModSource.VM_SLOT, mod_type=ModType.MANUAL, quantity_start= start_quantity_slot, quantity_final=final_quantity_slot, threshold=slot.low_stock_threshold)
     session.add(mod_vending_machine)
 
     session.flush()
@@ -295,7 +296,7 @@ def modify_threshold(session: Session, slot_value: str, threshold: str) -> Vendi
     
     slot.low_stock_threshold = int_threshold
 
-    mod = Modification(slot_id=slot.id, item_id=slot.item_id, source=ModSource.VM_SLOT, mod_type=ModType.MANUAL, quantity_start=slot.quantity, quantity_final=slot.quantity, threshold=int_threshold)
+    mod = Modification(slot_id=slot.id, item_id=slot.item_id, id_num=slot.item.id_num, source=ModSource.VM_SLOT, mod_type=ModType.MANUAL, quantity_start=slot.quantity, quantity_final=slot.quantity, threshold=int_threshold)
     session.add(mod)
 
     session.flush()
@@ -339,7 +340,7 @@ def transaction(session: Session, slot_value: str, quantity: str) -> VendingMach
     final_quantity = slot.quantity - int_quantity
     slot.quantity = final_quantity
 
-    mod = Modification(slot_id=slot.id, item_id=slot.item_id, source=ModSource.VM_SLOT, mod_type=ModType.TRANSACTION, quantity_start=start_quantity, quantity_final=final_quantity, threshold=slot.low_stock_threshold)
+    mod = Modification(slot_id=slot.id, item_id=slot.item_id, id_num=slot.item.id_num, source=ModSource.VM_SLOT, mod_type=ModType.TRANSACTION, quantity_start=start_quantity, quantity_final=final_quantity, threshold=slot.low_stock_threshold)
     session.add(mod)
 
     session.flush()
@@ -363,7 +364,7 @@ def check_low_stock(session: Session) -> list[dict]:
             final_low_stock_slots.append(
                 {
                     "slot_value": low_stock_slot.slot_value,
-                    "id": low_stock_slot.item_id,
+                    "id": low_stock_slot.item.id_num,
                     "name": low_stock_slot.item.name,
                     "quantity": low_stock_slot.quantity,
                     "threshold": low_stock_slot.low_stock_threshold

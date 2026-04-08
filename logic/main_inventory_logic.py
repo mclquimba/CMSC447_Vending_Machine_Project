@@ -31,16 +31,17 @@ def add_stock(session: Session, id: str, quantity: str, threshold: str) -> MainI
     int_quantity = int(strip_quantity)
     int_threshold = int(strip_threshold)
     
-    item = session.get(Item, int_id)
+    query = select(Item).where(Item.id_num == int_id)
+    item = session.scalars(query).first()
     if item is None:
         raise ValueError({"id": [f"Item {int_id} not found."]})
     
     if item.main_inventory is None:
-        item.main_inventory = MainInventory(item_id=int_id, quantity=int_quantity, low_stock_threshold=int_threshold)
+        item.main_inventory = MainInventory(item_id=item.id, quantity=int_quantity, low_stock_threshold=int_threshold)
     else:
         raise ValueError({"id": [f"Item {int_id} already exists in the main inventory."]})
 
-    mod = Modification(slot_id=None, item_id=int_id, source=ModSource.MAIN_INVENTORY, mod_type=ModType.MANUAL, quantity_start=int_quantity, quantity_final=int_quantity, threshold=int_threshold)
+    mod = Modification(slot_id=None, item_id= item.id, id_num=int_id, source=ModSource.MAIN_INVENTORY, mod_type=ModType.MANUAL, quantity_start=int_quantity, quantity_final=int_quantity, threshold=int_threshold)
 
     session.add(mod)
     session.flush()
@@ -60,7 +61,8 @@ def get_stock(session: Session, id: str) -> MainInventory:
     
     int_id = int(strip_id)
 
-    item = session.get(Item, int_id)
+    query = select(Item).where(Item.id_num == int_id)
+    item = session.scalars(query).first()
     check.check_item_main_inventory(item, int_id, errors_id)
     if errors_id:
         errors["id"] = errors_id
@@ -120,7 +122,8 @@ def restock(session: Session, id: str, change: str) -> MainInventory:
     int_id = int(strip_id)
     int_change = int(strip_change)
 
-    item = session.get(Item, int_id)
+    query = select(Item).where(Item.id_num == int_id)
+    item = session.scalars(query).first()
     check.check_item_main_inventory(item, int_id, errors_id)
     if errors_id:
         errors["id"] = errors_id
@@ -130,7 +133,7 @@ def restock(session: Session, id: str, change: str) -> MainInventory:
     final_quantity = item.main_inventory.quantity + int_change
     item.main_inventory.quantity = final_quantity
 
-    mod = Modification(slot_id=None, item_id=int_id, source=ModSource.MAIN_INVENTORY, mod_type=ModType.RESTOCK, quantity_start=start_quantity, quantity_final=final_quantity, threshold=item.main_inventory.low_stock_threshold)
+    mod = Modification(slot_id=None, item_id=item.id, id_num=int_id, source=ModSource.MAIN_INVENTORY, mod_type=ModType.RESTOCK, quantity_start=start_quantity, quantity_final=final_quantity, threshold=item.main_inventory.low_stock_threshold)
 
     session.add(mod)
     session.flush()
@@ -157,7 +160,8 @@ def modify_stock(session: Session, id: str, quantity: str) -> MainInventory:
     int_id = int(strip_id)
     int_quantity = int(strip_quantity)
 
-    item = session.get(Item, int_id)
+    query = select(Item).where(Item.id_num == int_id)
+    item = session.scalars(query).first()
     check.check_item_main_inventory(item, int_id, errors_id)
     if errors_id:
         errors["id"] = errors_id
@@ -166,7 +170,7 @@ def modify_stock(session: Session, id: str, quantity: str) -> MainInventory:
     start_quantity = item.main_inventory.quantity
     item.main_inventory.quantity = int_quantity
 
-    mod = Modification(slot_id=None, item_id=int_id, source=ModSource.MAIN_INVENTORY, mod_type=ModType.MANUAL, quantity_start=start_quantity, quantity_final=int_quantity, threshold=item.main_inventory.low_stock_threshold)
+    mod = Modification(slot_id=None, item_id=item.id, id_num=int_id, source=ModSource.MAIN_INVENTORY, mod_type=ModType.MANUAL, quantity_start=start_quantity, quantity_final=int_quantity, threshold=item.main_inventory.low_stock_threshold)
     
     session.add(mod)
     session.flush()
@@ -193,7 +197,8 @@ def modify_threshold(session: Session, id: str, threshold: str) -> MainInventory
     int_id = int(strip_id)
     int_threshold = int(strip_threshold)
 
-    item = session.get(Item, int_id)
+    query = select(Item).where(Item.id_num == int_id)
+    item = session.scalars(query).first()
     check.check_item_main_inventory(item, int_id, errors_id)
     if errors_id:
         errors["id"] = errors_id
@@ -201,7 +206,7 @@ def modify_threshold(session: Session, id: str, threshold: str) -> MainInventory
     
     item.main_inventory.low_stock_threshold = int_threshold
 
-    mod = Modification(slot_id=None, item_id=int_id, source=ModSource.MAIN_INVENTORY, mod_type=ModType.MANUAL, quantity_start=item.main_inventory.quantity, quantity_final=item.main_invetory.quantity, threshold=int_threshold)
+    mod = Modification(slot_id=None, item_id=item.id, id_num=int_id, source=ModSource.MAIN_INVENTORY, mod_type=ModType.MANUAL, quantity_start=item.main_inventory.quantity, quantity_final=item.main_invetory.quantity, threshold=int_threshold)
 
     session.add(mod)
     session.flush()
@@ -211,7 +216,7 @@ def check_low_stock(session: Session) -> list[dict]:
     low_stock_items = list_low_stock(session)
     return [
         {
-            "id": low_stock_item.item_id,
+            "id": low_stock_item.item.id_num,
             "name": low_stock_item.item.name,
             "quantity": low_stock_item.quantity,
             "threshold": low_stock_item.low_stock_threshold

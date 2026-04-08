@@ -10,6 +10,7 @@ MAX_CAT = 100
 class Item(Base):
     __tablename__ = "items"
     id: Mapped[int] = mapped_column(primary_key=True)
+    id_num: Mapped[int] = mapped_column(unique=True, nullable=False)
     name: Mapped[str] = mapped_column(String(MAX_NAME), nullable=False)
     price: Mapped[Decimal] = mapped_column(DECIMAL(10, 2), nullable=False)
     category: Mapped[str] = mapped_column(String(MAX_CAT), nullable=False)
@@ -20,5 +21,5 @@ class Item(Base):
     main_inventory: Mapped["MainInventory"] = relationship("MainInventory", back_populates="item", cascade="all, delete-orphan", uselist=False, passive_deletes=True)
 
     def __repr__(self):
-        return f"Item(id={self.id}, name={self.name}, category={self.category}, price={self.price})"
+        return f"Item(id={self.id_num}, name={self.name}, category={self.category}, price={self.price})"
     

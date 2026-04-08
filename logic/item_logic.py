@@ -6,6 +6,19 @@ from classes.item import Item, MAX_NAME, MAX_CAT
 from utilities.error_checking import ErrorChecking as check
 from decimal import Decimal
 
+def get_smallest_id_num(session: Session) -> int:
+    query = select(Item.id_num).order_by(Item.id_num)
+    id_num_list = session.scalars(query).all()
+
+    counter = 1
+    for id_num in id_num_list:
+        if counter != id_num:
+            return counter
+        counter += 1
+
+    return counter
+
+# IMPORTANT: Add a way to recover smallest possible id_num
 def create_item(session: Session, name: str, price: str, category: str) -> Item:
     errors = {}
     errors_name = []
@@ -29,7 +42,10 @@ def create_item(session: Session, name: str, price: str, category: str) -> Item:
     
     dec_price = Decimal(strip_price)
 
-    item = Item(name=strip_name, price=dec_price, category=strip_category)
+    int_id_num = get_smallest_id_num(session)
+
+    item = Item(id_num=int_id_num, name=strip_name, price=dec_price, category=strip_category)
+    
     session.add(item)
     session.flush()
     return item
@@ -48,7 +64,9 @@ def get_item(session: Session, id: str) -> Item:
     
     int_id = int(strip_id)
     
-    item = session.get(Item, int_id)
+    query = select(Item).where(Item.id_num == int_id)
+    item = session.scalars(query).first()
+
     if item is None:
         raise ValueError({"id": [f"Item {int_id} not found."]})
     
@@ -75,7 +93,7 @@ def get_item_name(session: Session, name: str) -> Item:
     
     return item
 
-def search_items(session: Session, string: str) -> list[Item]:
+def search_items(session: Session, string: Optional[str]) -> list[Item]:
     query = select(Item).order_by(Item.name)
     if string:
         to_search = f"%{string.strip().lower()}%"
@@ -109,7 +127,8 @@ def modify_item(session: Session, id: str, name: str, price: str, category: str)
     int_id = int(strip_id)
     dec_price = Decimal(strip_price)
 
-    item = session.get(Item, int_id)
+    query = select(Item).where(Item.id_num == int_id)
+    item = session.scalars(query).first()
     if item is None:
         raise ValueError({"id": [f"Item {int_id} not found."]})
     
@@ -137,13 +156,14 @@ def delete_item(session:Session, id: str) -> dict:
     
     int_id = int(strip_id)
 
-    item = session.get(Item, int_id)
+    query = select(Item).where(Item.id_num == int_id)
+    item = session.scalars(query).first()
     if item is None:
         raise ValueError({"id": [f"Item {int_id} not found."]})
     
     vending_machine_slots = [slot.slot_value for slot in item.vending_machine_slots]
     item_info = {
-        "id": item.id,
+        "id": item.id_num,
         "name": item.name,
         "slot_values": vending_machine_slots
     }

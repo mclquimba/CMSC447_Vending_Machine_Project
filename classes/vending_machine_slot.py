@@ -20,5 +20,6 @@ class VendingMachineSlot(Base):
     item: Mapped["Item"] = relationship("Item", back_populates="vending_machine_slots", passive_deletes=True)
     modifications: Mapped[List["Modification"]] = relationship("Modification", back_populates="vending_machine_slot")
 
+    # Add check for item
     def __repr__(self):
-        return f"VendingMachineSlot(item_id={self.item_id}, slot_value={self.slot_value}, quantity={self.quantity}, low_stock_threshold={self.low_stock_threshold})"
+        return f"VendingMachineSlot(item_id={self.item.id_num}, slot_value={self.slot_value}, quantity={self.quantity}, low_stock_threshold={self.low_stock_threshold})"

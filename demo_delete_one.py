@@ -5,7 +5,7 @@ from demo_constants import DEMO_NAME_1
 def main():
     with Session() as session:
         todelete = get_item_name(session, DEMO_NAME_1)
-        item = delete_item(session, str(todelete.id))
+        item = delete_item(session, str(todelete.id_num))
         if item is not None:
             print(item)
         session.commit()

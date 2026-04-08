@@ -9,10 +9,6 @@ def main():
     with Session() as session:
         item = create_item(session, DEMO_NAME_1, DEMO_PRICE_1, DEMO_CAT_1)
         session.commit()
-
-        str_id = str(item.id)
-        add_stock(session, str_id, DEMO_QUANTITY_1, DEMO_THRESH_1)
-        session.commit()
     print("Item created.")
 
 if __name__ == "__main__":
