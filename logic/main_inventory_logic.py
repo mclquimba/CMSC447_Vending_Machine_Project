@@ -1,5 +1,6 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
+from typing import Optional
 
 from classes.item import Item
 from classes.main_inventory import MainInventory
@@ -34,12 +35,16 @@ def add_stock(session: Session, id: str, quantity: str, threshold: str) -> MainI
     query = select(Item).where(Item.id_num == int_id)
     item = session.scalars(query).first()
     if item is None:
-        raise ValueError({"id": [f"Item {int_id} not found."]})
+        errors_id.append(f"Item {int_id} not found.")
+        errors["id"] = errors_id
+        raise ValueError(errors)
     
     if item.main_inventory is None:
         item.main_inventory = MainInventory(item_id=item.id, quantity=int_quantity, low_stock_threshold=int_threshold)
     else:
-        raise ValueError({"id": [f"Item {int_id} already exists in the main inventory."]})
+        errors_id.append(f"Item {int_id} already exists in the main inventory.")
+        errors["id"] = errors_id
+        raise ValueError(errors)
 
     mod = Modification(slot_id=None, item_id= item.id, id_num=int_id, source=ModSource.MAIN_INVENTORY, mod_type=ModType.MANUAL, quantity_start=int_quantity, quantity_final=int_quantity, threshold=int_threshold)
 
@@ -94,7 +99,7 @@ def list_low_stock(session: Session) -> list[MainInventory]:
     query = select(MainInventory).join(Item).order_by(Item.name).where(MainInventory.quantity < MainInventory.low_stock_threshold)
     return list(session.scalars(query))
 
-def search_stock(session: Session, string: str) -> list[MainInventory]:
+def search_stock(session: Session, string: Optional[str]) -> list[MainInventory]:
     query = select(MainInventory).join(Item).order_by(Item.name)
     if string:
         to_search = f"%{string.strip().lower()}%"

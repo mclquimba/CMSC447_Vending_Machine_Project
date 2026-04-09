@@ -1,5 +1,0 @@
-DEMO_NAME_1 = "Water"
-DEMO_PRICE_1 = "1.00"
-DEMO_CAT_1 = "Liquid"
-DEMO_QUANTITY_1 = "300"
-DEMO_THRESH_1 = "10"

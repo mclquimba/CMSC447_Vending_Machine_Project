@@ -1,7 +1,7 @@
 from sqlalchemy import String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import Optional, List
-from classes.base import Base
+from classes import Base
 
 MAX_SLOT_VAL = 10
 DEFAULT_CAP = 10
@@ -20,6 +20,10 @@ class VendingMachineSlot(Base):
     item: Mapped["Item"] = relationship("Item", back_populates="vending_machine_slots", passive_deletes=True)
     modifications: Mapped[List["Modification"]] = relationship("Modification", back_populates="vending_machine_slot")
 
-    # Add check for item
     def __repr__(self):
-        return f"VendingMachineSlot(item_id={self.item.id_num}, slot_value={self.slot_value}, quantity={self.quantity}, low_stock_threshold={self.low_stock_threshold})"
+        string = ""
+        if self.item is None:
+            string = f"VendingMachineSlot(item=None, slot_value={self.slot_value}, vm_quantity={self.quantity}, vm_cap={self.cap}, vm_low_stock_threshold={self.low_stock_threshold})"
+        else:
+            string = f"VendingMachineSlot(item_id={self.item.id_num}, item_name={self.item.name}, slot_value={self.slot_value}, vm_quantity={self.quantity}, vm_cap={self.cap}, vm_low_stock_threshold={self.low_stock_threshold})"
+        return string

@@ -1,6 +1,6 @@
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from classes.base import Base
+from classes import Base
 
 
 DEFAULT_QUANTITY = 0
@@ -16,4 +16,4 @@ class MainInventory(Base):
     item: Mapped["Item"] = relationship("Item", back_populates="main_inventory", passive_deletes=True)
 
     def __repr__(self):
-        return f"MainInventory(item_id={self.item_id}, quantity={self.quantity}, low_stock_threshold={self.low_stock_threshold})"
+        return f"MainInventory(item_id={self.item.id_num}, name={self.item.name}, main_quantity={self.quantity}, main_low_stock_threshold={self.low_stock_threshold})"

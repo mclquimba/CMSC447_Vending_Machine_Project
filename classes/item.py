@@ -1,6 +1,6 @@
 from sqlalchemy import DECIMAL, String
 from sqlalchemy.orm import relationship, mapped_column, Mapped
-from classes.base import Base
+from classes import Base
 from decimal import Decimal
 from typing import List
 

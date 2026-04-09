@@ -2,7 +2,7 @@ from sqlalchemy import String, ForeignKey, Enum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import Optional
 import enum
-from classes.base import Base
+from classes import Base
 from datetime import datetime, timezone
 
 class ModSource(enum.Enum):

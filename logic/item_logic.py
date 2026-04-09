@@ -68,7 +68,9 @@ def get_item(session: Session, id: str) -> Item:
     item = session.scalars(query).first()
 
     if item is None:
-        raise ValueError({"id": [f"Item {int_id} not found."]})
+        errors_id.append(f"Item {int_id} not found.")
+        errors["id"] = errors_id
+        raise ValueError(errors)
     
     return item
 
@@ -86,6 +88,7 @@ def get_item_name(session: Session, name: str) -> Item:
     
     query = select(Item).where(Item.name == strip_name)
     item = session.scalars(query).first()
+
     if item is None:
         errors_name.append(f"{strip_name} does not exist.")
         errors["name"] = errors_name
@@ -130,7 +133,9 @@ def modify_item(session: Session, id: str, name: str, price: str, category: str)
     query = select(Item).where(Item.id_num == int_id)
     item = session.scalars(query).first()
     if item is None:
-        raise ValueError({"id": [f"Item {int_id} not found."]})
+        errors_id.append(f"Item {int_id} not found.")
+        errors["id"] = errors_id
+        raise ValueError(errors)
     
     if strip_name:
         item.name = strip_name
@@ -159,7 +164,9 @@ def delete_item(session:Session, id: str) -> dict:
     query = select(Item).where(Item.id_num == int_id)
     item = session.scalars(query).first()
     if item is None:
-        raise ValueError({"id": [f"Item {int_id} not found."]})
+        errors_id.append(f"Item {int_id} not found.")
+        errors["id"] = errors_id
+        raise ValueError(errors)
     
     vending_machine_slots = [slot.slot_value for slot in item.vending_machine_slots]
     item_info = {
