@@ -27,9 +27,9 @@ def dashboard():
     
     return render_template("dashboard.html", items_out = items_out, low_items = low_items, last_checked = last_checked, staff_name = staff_name)
 
-@app.route("/restock")
-def restock():
-    return render_template('restock.html')
+# @app.route("/restock")
+# def restock():
+#     return render_template('restock.html')
 
 inventory = [
 
@@ -94,12 +94,12 @@ def buy(slot):
             
 @app.route("/restock")
 def restock_item():
-    restockList = []
+    restock_list = []
     for item in inventory:
         item["status"] = get_status(item)
-        if item["status"] in ["LOW","OUT"]
-        restockList.append(item)
-    return render_template("restock.html", items = restockList)
+        if item["status"] in ["LOW","OUT"]:
+            restock_list.append(item)
+    return render_template("restock.html", items = restock_list)
 
 if __name__ == '__main__':
     app.run(debug=True)
