@@ -19,61 +19,40 @@
 <h2>Items Fully Stocked</h2>
 
 <table class="inventory-table">
+  <tr>
+    <th>Slot</th>
+    <th>Item</th>
+    <th>Quantity</th>
+    <th>Max</th>
+    <th>Price</th>
+    <th>Status</th>
+    <th>Buy</th>
+  </tr>
 
-<tr>
+  {% for item in items %}
+  <tr>
+    <td> {{ item.slot }} </td>
+    <td> {{ item.item }} </td>
+    <td> {{ item.quantity }} </td>
+    <td> {{ item.max }} </td>
+    <td> $ {{ "%.2f"| format(item.price) }} </td>
+    <td class = "
+		 {% if item.status == 'GOOD' %} good
+		 {% elif item.status == 'LOW' %} low
+		{% else %} out
+		{% endif %}">
+      {{ item.status }}
+    </td>
 
-  <th>Slot</th>
-  
-<th>Item</th>
-<th>Quantity</th>
-<th>Max</th>
-<th>Status</th>
+    <td>
+      <a href = "/buy/{{ item.slot }}" >
+	<button class = "save-btn"> Buy </button>
+      </a>
+    </td>
+  </tr>
+  {% endfor %}
+  </table>
 
-</tr>
-
-<tr>
-
-<td>A1</td>
-<td>Doritos</td>
-<td>10</td>
-<td>10</td>
-<td class="good">GOOD</td>
-
-</tr>
-
-<tr>
-
-<td>B3</td>
-<td>Water</td>
-<td>8</td>
-<td>8</td>
-<td class="good">GOOD</td>
-
-</tr>
-
-<tr>
-
-<td>C2</td>
-<td>Snickers</td>
-<td>12</td>
-<td>12</td>
-<td class="good">GOOD</td>
-
-</tr>
-
-<tr>
-
-<td>D4</td>
-<td>Notebook</td>
-<td>6</td>
-<td>6</td>
-<td class="good">GOOD</td>
-
-</tr>
-
-</table>
-
-</section>
 
 <section class="action-links">
 
