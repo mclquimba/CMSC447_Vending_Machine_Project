@@ -6,26 +6,27 @@
 
 <title>Available Inventory</title>
 
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
 </head>
 
 <body>
 
 <h1>Available Inventory</h1>
 
+<section>
+
 <h2>Items Fully Stocked</h2>
 
-<table border="1">
+<table class="inventory-table">
 
 <tr>
 
-<th>Slot</th>
-
+  <th>Slot</th>
+  
 <th>Item</th>
-
 <th>Quantity</th>
-
 <th>Max</th>
-
 <th>Status</th>
 
 </tr>
@@ -33,80 +34,54 @@
 <tr>
 
 <td>A1</td>
-
 <td>Doritos</td>
-
 <td>10</td>
-
 <td>10</td>
-
-<td>GOOD</td>
+<td class="good">GOOD</td>
 
 </tr>
 
 <tr>
 
 <td>B3</td>
-
-<td>Snickers</td>
-
+<td>Water</td>
 <td>8</td>
-
 <td>8</td>
-
-<td>GOOD</td>
+<td class="good">GOOD</td>
 
 </tr>
 
 <tr>
 
 <td>C2</td>
-
-<td>Water Bottle</td>
-
-<td>6</td>
-
-<td>6</td>
-
-<td>GOOD</td>
+<td>Snickers</td>
+<td>12</td>
+<td>12</td>
+<td class="good">GOOD</td>
 
 </tr>
 
 <tr>
 
 <td>D4</td>
-
-<td>Granola Bar</td>
-
-<td>12</td>
-
-<td>12</td>
-
-<td>GOOD</td>
-
-</tr>
-
-<tr>
-
-<td>E6</td>
-
 <td>Notebook</td>
-
-<td>5</td>
-
-<td>5</td>
-
-<td>GOOD</td>
+<td>6</td>
+<td>6</td>
+<td class="good">GOOD</td>
 
 </tr>
 
 </table>
 
-<br>
+</section>
 
-<a href="dashboard.html">
-<button>Back to Dashboard</button>
-</a>
+<section class="action-links">
+
+<a href="/dashboard" class="action-box">Back to Dashboard</a>
+
+<a href="/restock" class="action-box">Go to Restock</a>
+
+</section>
 
 </body>
 
