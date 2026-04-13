@@ -1,84 +1,93 @@
-A<!DOCTYPE html>
-<html lang = "en">
+<!DOCTYPE html>
+<html lang="en">
 
-  <head>
-    <meta charset = "UTF-8">
-    <title> Vending Machine Inventory </title>
-    <link rel= "stylesheet" href = "../static/style.css">
-  </head>
-  <body>
-    <h1> Vending Machine Inventory Dashboard</h1>
-    <section>
-      <h2> Needs Restocking</h2>
+<head>
 
-      <table border = "1">
-	<table text = "summary">
-	  
-	<tr>
-	  <th>Slot</th>
-	  <th>Item</th>
-	  <th>Quantity</th>
-	  <th>Max</th>
-	  <th>Status</th>
-	  <th>Save</th>
-	</tr>
+<meta charset="UTF-8">
 
-	<tr>
-	  <td> A1</td>
-	  <td>Doritos</td>
-	  <td><input type = "number" value ="0" min = "0"> </td>
-	  <td><input type = "number" value = "10" min = "1"></td>
-		     <td>
-		       <select>
-			 <option class ="out"> OUT </option>
-			 <option class = "low"  selected> LOW </option>
-			 <option class = "good">GOOD </option>
-		       </select>	       
-	</tr>
-	<tr>
-	  <td> B2 </td>
-	  <td> Pencils</td>
-	 <td><input type = "number" value ="0" min = "0"> </td>
-          <td><input type = "number" value = "7" min = "1"></td>
-                     <td>
-                       <select>
-                         <option class ="out"> OUT </option>
-                         <option class = "low"  selected> LOW </option>
-                         <option class = "good">GOOD </option>
-                       </select>
-	
+<title>Restock Inventory</title>
 
-	
-	</tr>
-	<tr>
-          <td> C5 </td>
-          <td> Tissues</td>
-         <td><input type = "number" value ="0" min = "0"> </td>
-          <td><input type = "number" value = "12" min = "1"></td>
-                     <td>
-                       <select>
-                         <option class ="out"> OUT </option>
-                         <option class = "low"  selected> LOW </option>
-                         <option class = "good">GOOD </option>
-                       </select>
-        </tr>
-	<tr>
-          <td> F7 </td>
-          <td> Charger</td>
-          <td><input type = "number" value ="0" min = "0"> </td>
-          <td><input type = "number" value = "8" min = "1"></td>
-                     <td>
-                       <select>
-                         <option class ="out"> OUT </option>
-                         <option class = "low"  selected> LOW </option>
-                         <option class = "good">GOOD </option>
-                       </select>
-	</tr>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<h1>Restock Inventory</h1>
+
+<section>
+
+<h2>Items Needing Attention</h2>
+
+<table class="inventory-table">
+
+<tr>
+  <th>Slot</th>
+  <th> Price </th>
+<th>Item</th>
+<th>Quantity</th>
+<th>Max</th>
+  <th>Status</th>
+	     </tr>
+
+<tr>
+  <td>A1</td>
+  <td>$7 </td>
+<td>Doritos</td>
+<td>0</td>
+<td>10</td>
+<td class="out">OUT</td>
+</tr>
+
+<tr>
+  <td>B2</td>
+  <td>$4 </td>
+<td>Pencils</td>
+<td>2</td>
+<td>8</td>
+<td class="low">LOW</td>
+</tr>
+
+<tr>
+  <td>C5</td>
+  <td>$1 </td>
+<td>Tissues</td>
+<td>3</td>
+<td>10</td>
+<td class="low">LOW</td>
+</tr>
+
+<tr>
+  <td>F7</td>
+  <td>$9 </td>
+<td>Charger</td>
+<td>1</td>
+<td>5</td>
+<td class="low">LOW</td>
+</tr>
+
+<tr>
+  <td>D4</td>
+  <td>$3 </td>
+<td>Coke</td>
+<td>0</td>
+<td>8</td>
+<td class="out">OUT</td>
+</tr>
+  
 
 </table>
-    </section>
-    <a href="dashboard.html">
-<button>Back to Dashboard</button>
-</a>
-	  </body>
+
+</section>
+
+<section class="action-links">
+
+<a href="/dashboard" class="action-box">Back to Dashboard</a>
+
+<a href="/stock" class="action-box">View Available Stock</a>
+
+</section>
+
+</body>
+
 </html>
