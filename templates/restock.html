@@ -2,48 +2,52 @@
 <html lang="en">
 
 <head>
-
-<meta charset="UTF-8">
-
-<title>Restock Inventory</title>
-
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
+  <meta charset="UTF-8">
+  <title>Restock Inventory</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
 
 <h1>Restock Inventory</h1>
 
-<section>
+  <section>
+    <h2>Items Needing Attention</h2>
 
-<h2>Items Needing Attention</h2>
-
-<table class="inventory-table">
-
-<tr>
-<th>Slot</th>
-<th>Item</th>
-<th>Quantity</th>
-<th> Price </th>
-<th>Max</th>
-<th>Status</th>
-</tr>
-
-
+    <table class="inventory-table">
+    <tr>
+      <th>Slot</th>
+      <th>Item</th>
+      <th>Quantity</th>
+      <th>Max</th>
+      <th> Price </th>
+      <th>Status</th>
+    </tr>
+{% for item in items %}
+  <tr>
+    <td> {{ item.slot }} </td>
+    <td> {{ item.item }} </td>
+    <td> {{ item.quantity }} </td>
+    <td> {{ item.max }} </td>
+    <td> $ {{ "%.2f"| format(item.price) }} </td>
+    <td class = "
+		 {% if item.status == 'GOOD' %} good
+		 {% elif item.status == 'LOW' %} low
+		{% else %} out
+		{% endif %}">
+      {{ item.status }}
+    </td>
+    </tr>
+  {% endfor %}
 </table>
-
 </section>
 
 <section class="action-links">
-
 <a href="/dashboard" class="action-box">Back to Dashboard</a>
-
 <a href="/stock" class="action-box">View Available Stock</a>
+  </section>
+    </body>
+      </html>
 
-</section>
 
-</body>
-
-</html>
-
+      
