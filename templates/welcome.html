@@ -1,21 +1,26 @@
 <!DOCTYPE html>
 <html lang = "en">
   <head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <div class = "login-container">
+    <img src="{{ url_for('static', filename='images/umbclogo.jpg') }}" class="logo">
     <title>Vending Machine System </title>
   </head>
 
   <body>
     <h1> Welcome to the Inventory System </h1>
     <h2> Staff Login </h2>
-    <form action = "dashboard.html">
-    <label>UMBC ID: </label>
-    <input type = "text" required>
+    {% if error %}
+    <p style = "color:red;">{{ error}} </p>
+    {% endif %}
+    <form method = "POST">
+      <input type = "text" name = "username" placeholder = "UMBC ID">
     <br><br>
-    <label> Password: </label>
-    <input type = "password" required>
+    <input type = "password" name = "password" placeholder = "Password">
     <br><br>
     <button type = "submit"> Sign In </button>
-</form>
+    </form>
+    </div>
   </body>
 </html>		    
     
