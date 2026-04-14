@@ -22,25 +22,42 @@
       <th>Max</th>
       <th> Price </th>
       <th>Status</th>
-    </tr>
-{% for item in items %}
-  <tr>
-    <td> {{ item.slot }} </td>
-    <td> {{ item.item }} </td>
-    <td> {{ item.quantity }} </td>
-    <td> {{ item.max }} </td>
-    <td> $ {{ "%.2f"| format(item.price) }} </td>
-    <td class = "
-		 {% if item.status == 'GOOD' %} good
-		 {% elif item.status == 'LOW' %} low
-		{% else %} out
-		{% endif %}">
-      {{ item.status }}
+    {% for item in items %}
+
+<form action="/update_item/{{ item.slot }}" method="POST">
+<tr>
+    <td>{{ item.slot }}</td>
+    <td>{{ item.item }}</td>
+
+    <td>
+        <input type="number" name="quantity" value="{{ item.quantity }}" min="0">
     </td>
-    </tr>
-  {% endfor %}
+
+    <td>${{ "%.2f"|format(item.price) }}</td>
+
+    <td>
+        <input type="number" name="max" value="{{ item.max }}" min="1">
+    </td>
+
+    <td class="
+        {% if item.status == 'GOOD' %}good
+        {% elif item.status == 'LOW' %}low
+        {% else %}out
+        {% endif %}
+    ">
+        {{ item.status }}
+    </td>
+
+    <td>
+    <button type="submit" class="table-btn">Save</button>
+</td>
+</tr>
+</form>
+
+{% endfor %}
 </table>
 </section>
+
 
 <section class="action-links">
 <a href="/dashboard" class="action-box">Back to Dashboard</a>
@@ -48,6 +65,9 @@
   </section>
     </body>
       </html>
+
+    
+      
 
 
       
