@@ -1,9 +1,14 @@
 from flask import Flask, render_template, request, redirect, url_for
+from datetime import datetime
+from flask import session
+
 
 app = Flask(__name__)
+app.secret_key = "umbc-secret-key"
 
 @app.route("/", methods = ['GET', 'POST'])
 def welcome():
+    global last_staff_name
     error = None
 
     if request.method == "POST":
@@ -15,21 +20,11 @@ def welcome():
         elif password != "umbc123":
             error = "Invalid password."
         else:
+            session["staff_name"] = username 
+            last_staff_name = username 
             return redirect(url_for("dashboard"))
+
     return render_template('welcome.html', error = error)
-
-@app.route("/dashboard")
-def dashboard():
-    items_out = 6
-    low_items = 4
-    last_checked = "4/8/26 10:30PM"
-    staff_name = "UMBC3212"
-    
-    return render_template("dashboard.html", items_out = items_out, low_items = low_items, last_checked = last_checked, staff_name = staff_name)
-
-# @app.route("/restock")
-# def restock():
-#     return render_template('restock.html')
 
 inventory = [
 
@@ -75,12 +70,44 @@ def get_status(item):
     else:
         return "GOOD"
 
-    
-@app.route("/stock")
-def stock():
+@app.route("/dashboard")
+def dashboard():
+    items_out = 0
+    items_low = 0
+
     for item in inventory:
         item["status"] = get_status(item)
-    return render_template('stock.html', items = inventory) 
+
+        if item["status"] == "OUT":
+            items_out += 1
+        elif item["status"] == "LOW":
+            items_low += 1
+
+    last_checked = datetime.now().strftime("%A, %B %d • %I:%M %p")
+    staff_name = session.get("staff_name", "Unknown")
+    previous_staff = last_staff_name
+
+    return render_template(
+    "dashboard.html",
+    items_out=items_out,
+    low_items=items_low,
+    last_checked=last_checked,
+    staff_name=staff_name,
+    previous_staff=previous_staff
+)
+
+@app.route("/stock")
+def stock():
+    page = request.args.get("page", 1 , type = int)
+
+    for item in inventory:
+        item["status"] = get_status(item)
+    
+    if page == 1:
+        items = inventory[0:12]
+    else:
+        items = inventory[12:24]
+    return render_template('stock.html', items = items, page =page) 
 
     
 @app.route("/buy/<slot>")
@@ -100,6 +127,34 @@ def restock_item():
         if item["status"] in ["LOW","OUT"]:
             restock_list.append(item)
     return render_template("restock.html", items = restock_list)
+
+@app.route("/update_item/<slot>", methods=["POST"])
+def update_item(slot):
+
+    for item in inventory:
+        if item["slot"] == slot:
+
+            qty = int(request.form.get("quantity"))
+            max_val = int(request.form.get("max"))
+
+            if qty < 0:
+                qty = 0
+
+            if qty > max_val:
+                qty = max_val
+
+            item["quantity"] = qty
+            item["max"] = max_val
+            item["status"] = get_status(item)
+
+            break
+
+    return redirect(url_for("restock_item"))
+        
+@app.route("/logout")
+def logout():
+    session.clear()   
+    return redirect(url_for("welcome"))
 
 if __name__ == '__main__':
     app.run(debug=True)
