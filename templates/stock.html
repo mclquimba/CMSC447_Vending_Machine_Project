@@ -45,14 +45,23 @@
     </td>
 
     <td>
-      <a href = "/buy/{{ item.slot }}" >
-	<button class = "save-btn"> Buy </button>
+      <a href = "/buy/{{ item.slot }}" class = "table-btn"> Buy
       </a>
     </td>
   </tr>
   {% endfor %}
   </table>
 
+<div style = "margin-top: 20px; text-align: center;">
+
+{% if page > 1 %}
+  <a href = "/stock?page={{ page - 1}}" class="table-btn">Previous</a>
+{% endif %}
+{% if page < 2 %}
+<a href = "/stock?page={{ page + 1}}" class="table-btn"> Next</a>
+{% endif %}
+</section>
+</div>
 
 <section class="action-links">
 
