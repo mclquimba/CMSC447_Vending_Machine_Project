@@ -156,5 +156,8 @@ def logout():
     session.clear()   
     return redirect(url_for("welcome"))
 
+@app.route("/forgot-password")
+def forgot_password():
+    return redirect("https://forms.gle/UQewp7yneGsjfZ6M9")
 if __name__ == '__main__':
     app.run(debug=True)
