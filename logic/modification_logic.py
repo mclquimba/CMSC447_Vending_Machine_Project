@@ -9,6 +9,7 @@ def _mod_manual(session: Session, slot: VendingMachineSlot, new_item_name: Optio
     if slot is None:
         return False
     
+    slot_value = slot.slot_value
     item_name_old = slot.item_name
     item_price_old = slot.item_price
     quantity_cur_old = slot.quantity_cur
@@ -20,6 +21,7 @@ def _mod_manual(session: Session, slot: VendingMachineSlot, new_item_name: Optio
     threshold_new = new_threshold
     
     mod = Modification(type=ModType.MANUAL,
+                       slot_value=slot_value,
                        old_item_name=item_name_old,
                        new_item_name=item_name_new,
                        old_item_price=item_price_old,
@@ -38,6 +40,7 @@ def _mod_restock(session: Session, slot: VendingMachineSlot, new_quantity_cur: i
     if slot is None:
         return False
     
+    slot_value = slot.slot_value
     item_name_old = slot.item_name
     item_price_old = slot.item_price
     quantity_cur_old = slot.quantity_cur
@@ -49,6 +52,7 @@ def _mod_restock(session: Session, slot: VendingMachineSlot, new_quantity_cur: i
     threshold_new = slot.threshold
     
     mod = Modification(type=ModType.RESTOCK,
+                       slot_value=slot_value,
                        old_item_name=item_name_old,
                        new_item_name=item_name_new,
                        old_item_price=item_price_old,
@@ -67,6 +71,7 @@ def _mod_transaction(session: Session, slot: VendingMachineSlot, new_quantity_cu
     if slot is None:
         return False
     
+    slot_value = slot.slot_value
     item_name_old = slot.item_name
     item_price_old = slot.item_price
     quantity_cur_old = slot.quantity_cur
@@ -78,6 +83,7 @@ def _mod_transaction(session: Session, slot: VendingMachineSlot, new_quantity_cu
     threshold_new = slot.threshold
     
     mod = Modification(type=ModType.TRANSACTION,
+                       slot_value=slot_value,
                        old_item_name=item_name_old,
                        new_item_name=item_name_new,
                        old_item_price=item_price_old,

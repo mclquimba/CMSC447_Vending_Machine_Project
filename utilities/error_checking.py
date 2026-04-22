@@ -76,6 +76,9 @@ class ErrorChecking:
                 if int_quantity_cur < 0:
                     errors_quantity_cur.append("Current Quantity can not be negative.")
                     num_errors += 1
+                if int_quantity_cur > DEFAULT_MAX_QUANTITY:
+                    errors_quantity_cur.append(f"Current Quantity can not exceed the Maximum Quantity. Max Quantity = {DEFAULT_MAX_QUANTITY}.")
+                    num_errors += 1
             except ValueError:
                 errors_quantity_cur.append("Current Quantity must be an integer.")
                 num_errors += 1

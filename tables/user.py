@@ -2,9 +2,9 @@ from sqlalchemy import Enum, String
 from sqlalchemy.orm import Mapped, mapped_column
 import enum
 
-MAX_USERNAME_CHARS = 1000
+MAX_USERNAME_CHARS = 500
 
-from base import Base
+from tables import Base
 
 class Role(enum.Enum):
     ADMIN = "Administrator"

@@ -123,7 +123,7 @@ def clear_slot(session: Session, slot_value: str) -> VendingMachineSlot:
     
     ec.check_slot_nop(slot_stripped, errors_slot)
     
-    for field, field_errors in (("slot", errors_slot)):
+    for field, field_errors in [("slot", errors_slot)]:
         if field_errors:
             errors[field] = field_errors
             

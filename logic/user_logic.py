@@ -65,7 +65,7 @@ def add_user(session: Session, username: str, role: Role) -> User:
     session.flush()
     
     return new_user
-
+    
 """
  def modify_user(session: Session, user_id: str, username: str, role: Role) -> User:
     errors = {}
@@ -73,7 +73,6 @@ def add_user(session: Session, username: str, role: Role) -> User:
     errors_username = []
     errors_role = []
 """
-    
     
 def delete_user(session: Session, user_id: str) -> dict:
     errors = {}

@@ -1,4 +1,4 @@
-from sqlalchemy import Enum, ForeignKey, DECIMAL
+from sqlalchemy import Enum, DECIMAL, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import Optional
 from datetime import datetime
@@ -6,7 +6,10 @@ from decimal import Decimal
 from pytz import timezone
 import enum
 
-from base import Base
+from tables import Base
+
+MAX_NAME_CHARS = 200
+MAX_SLOT_CHARS = 10
 
 class ModType(enum.Enum):
     RESTOCK = "restock"
@@ -16,14 +19,14 @@ class ModType(enum.Enum):
 class Modification(Base):
     __tablename__ = "modifications"
     id: Mapped[int] = mapped_column(primary_key=True)
-    slot_value: Mapped[str] = mapped_column(nullable=False, unique=False)
+    slot_value: Mapped[str] = mapped_column(String(MAX_SLOT_CHARS), nullable=False, unique=False)
     type: Mapped[ModType] = mapped_column(Enum(ModType), nullable=False)
-    old_item_name: Mapped[Optional[str]] = mapped_column()
-    new_item_name: Mapped[Optional[str]] = mapped_column()
+    old_item_name: Mapped[Optional[str]] = mapped_column(String(MAX_NAME_CHARS), nullable=True)
+    new_item_name: Mapped[Optional[str]] = mapped_column(String(MAX_NAME_CHARS), nullable=True)
     old_item_price: Mapped[Optional[Decimal]] = mapped_column()
     new_item_price: Mapped[Optional[Decimal]] = mapped_column()
-    old_quantity_cur: Mapped[int] = mapped_column()
-    new_quantity_cur: Mapped[int] = mapped_column()
+    old_quantity_cur: Mapped[int] = mapped_column(nullable=False)
+    new_quantity_cur: Mapped[int] = mapped_column(nullable=False)
     old_threshold: Mapped[int] = mapped_column(nullable=False)
     new_threshold: Mapped[int] = mapped_column(nullable=False)
     timestamp: Mapped[datetime] = mapped_column(default=lambda: datetime.now(timezone('EST')), nullable=False)

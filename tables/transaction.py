@@ -3,7 +3,8 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from decimal import Decimal
 from datetime import datetime
 from pytz import timezone
-from base import Base
+
+from tables import Base
 
 class Transaction(Base):
     __tablename__ = "transactions"

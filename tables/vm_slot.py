@@ -1,9 +1,10 @@
 from sqlalchemy import String, DECIMAL, Enum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import Optional
-from tables import Base
 from decimal import Decimal
 import enum
+
+from tables import Base
 
 MAX_NAME_CHARS = 200
 MAX_SLOT_CHARS = 10
