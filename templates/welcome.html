@@ -9,7 +9,10 @@
   <nav>
   <body>
     <h1> Welcome to the Inventory System </h1>
-    <h2> Staff Login </h2>
+    <div class = "createAccount">
+    <h2> <strong> Login </strong> or </h2>
+    <a href= "/createAccount" class = "createAccountText"> Create an Account</a>
+  </div>
     {% if error %}
     <p style = "color:red;">{{ error}} </p>
     {% endif %}
