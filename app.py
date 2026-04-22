@@ -82,16 +82,25 @@ def dashboard():
             items_out += 1
         elif item["status"] == "LOW":
             items_low += 1
-
-    last_checked = datetime.now().strftime("%A, %B %d • %I:%M %p")
+    
+    user_sessions = {}
     staff_name = session.get("staff_name", "Unknown")
-    previous_staff = last_staff_name
+    last_login = user_sessions.get(staff_name) 
+    user_sessions[staff_name] = datetime.now()
+
+    if last_login:
+        time_diff = datetime.now() - last_login
+        current_time_str = datetime.now().strftime("%A, %B %d • %I:%M %p")
+
+
+    
+    previous_staff = staff_name
 
     return render_template(
     "dashboard.html",
     items_out=items_out,
     low_items=items_low,
-    last_checked=last_checked,
+    last_login=last_login,
     staff_name=staff_name,
     previous_staff=previous_staff
 )
@@ -159,5 +168,10 @@ def logout():
 @app.route("/forgot-password")
 def forgot_password():
     return redirect("https://forms.gle/UQewp7yneGsjfZ6M9")
+
+@app.route("/createAccount")
+def createAccount():
+
+    return render_template(createAccount.html)
 if __name__ == '__main__':
     app.run(debug=True)
