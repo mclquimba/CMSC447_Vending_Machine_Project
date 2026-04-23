@@ -29,7 +29,7 @@ class Modification(Base):
     new_quantity_cur: Mapped[int] = mapped_column(nullable=False)
     old_threshold: Mapped[int] = mapped_column(nullable=False)
     new_threshold: Mapped[int] = mapped_column(nullable=False)
-    timestamp: Mapped[datetime] = mapped_column(default=lambda: datetime.now(timezone('EST')), nullable=False)
+    timestamp: Mapped[datetime] = mapped_column(default=lambda: datetime.now(timezone('US/Eastern')), nullable=False)
     
     def __repr__(self):
         item_name_old = "None" if self.old_item_name is None else self.old_item_name
