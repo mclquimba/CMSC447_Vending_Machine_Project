@@ -11,7 +11,7 @@
     <h1> Welcome to the Inventory System </h1>
     <div class = "createAccount">
     <h2> <strong> Login </strong> or </h2>
-    <a href= "/createAccount" class = "createAccountText"> Create an Account</a>
+    <a href= "/createaccount" class = "createaccountText"> Create an Account</a>
   </div>
     {% if error %}
     <p style = "color:red;">{{ error}} </p>
@@ -21,7 +21,7 @@
     <br><br>
     <input type = "password" name = "password" placeholder = "Password">
     <div class="form-actions">
-    <a href="https://forms.gle/UQewp7yneGsjfZ6M9" target = "_blank" class="forgot">Forgot your password?</a>
+    <a href="/forgotpassword" class="forgot">Forgot password?</a>
     <button type="submit"><strong>Log In</strong></button>
   </div>
     </form>
