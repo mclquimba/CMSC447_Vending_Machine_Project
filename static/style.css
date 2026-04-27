@@ -1,7 +1,6 @@
 body {
     font-family: Arial, Helvetica, sans-serif;
     background: #f5ca5c;
-    height: 100vh;
     background-position: center;;
     margin: 0;
     padding: 0;
@@ -28,8 +27,9 @@ section {
     border-radius: 12px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
     text-align: center;
-     min-height: 280px;
+    min-height: 280px;
 }
+
 
 .logo {
     width: 90px;
@@ -53,22 +53,98 @@ section {
     margin-top: 10px;
 }
 
-.forgot {
+.createaccountText{
     font-family: Arial, Helvetica, sans-serif;
     font-size: 14px;
     color: #1741ff;
     text-decoration: none;
 }
 
-.forgot:hover {
+.createaccountText:hover {
     text-decoration: underline;
 }
+.createAccount h2 {
+    margin: 0;
+}
+
 /*input inside the container*/
 .login-container input:focus {
     outline: none;
     border-color: #100075;
 }
 
+.AccountSetup {
+    background: white;
+    width: 300px;
+    margin: 80px auto;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.AccountSetup h1 {
+    margin: 0 0 8px 0;
+    font-size: 22px;
+}
+
+.AccountSetup p {
+    margin: 0 0 18px 0;
+    font-size: 13px;
+    color: #555;
+    line-height: 1.4;
+}
+
+.AccountSetup form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.AccountSetup input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 13px;
+    width: 60%;
+    margin: 0 auto;
+}
+
+.AccountSetup button {
+    margin: 0 auto;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background: #3ba606;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    width: 50%;
+}
+
+.AccountSetup button:hover {
+    background:#048b41;
+}
+
+.form-message {
+    margin-top: 12px;
+    font-size: 13px;
+    color: red !important;
+    font-weight: 500;
+}
+
+.forgot {
+    display: inline-block;
+    margin-top: 14px;
+    color: #1741ff;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.forgot:hover {
+    text-decoration: underline;
+}
 .login-container button {
     width: 35%;
     padding: 12px;
