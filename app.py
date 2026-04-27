@@ -1,10 +1,16 @@
 from flask import Flask, render_template, request, redirect, url_for
 from datetime import datetime
 from flask import session
+import smtplib
+from email.message import EmailMessage
+#from logic.modification_logic import 
+import secrets
 
 
 app = Flask(__name__)
 app.secret_key = "umbc-secret-key"
+approved_users = ["staff123", "umbcislove1", "UMBC3212","apascal1"]
+
 
 @app.route("/", methods = ['GET', 'POST'])
 def welcome():
@@ -14,7 +20,7 @@ def welcome():
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
-
+        
         if not username or not password:
             error = "Please enter both username and password."
         elif password != "umbc123":
@@ -25,6 +31,16 @@ def welcome():
             return redirect(url_for("dashboard"))
 
     return render_template('welcome.html', error = error)
+
+    def newWelcome():
+        while True:
+            try: 
+                if request.method == "POST":
+                    username = request.form.get("username")
+                    password = request.form.get("passwowrd")
+                break
+            except ValueError:
+                print("Invalid password please try again")
 
 inventory = [
 
@@ -111,6 +127,9 @@ def stock():
 
     for item in inventory:
         item["status"] = get_status(item)
+
+        if item["quantity"] == 0:
+            item["name"] = "empty"
     
     if page == 1:
         items = inventory[0:12]
@@ -164,14 +183,106 @@ def update_item(slot):
 def logout():
     session.clear()   
     return redirect(url_for("welcome"))
+ 
 
-@app.route("/forgot-password")
+
+sender = "umbctest4@gmail.com"
+app_password = "fwcr omei khkw dnna"
+
+approved_users = ["staff123", "umbcislove1", "UMBC3212","apascal1"]
+
+
+def send_password_email(username):
+    if username not in approved_users:
+        return "User not approved."
+    receiver = username + "@umbc.edu"
+
+    msg = EmailMessage()
+    msg.set_content("Your vending machine staff password is: umbc123")
+    msg["Subject"] = "Vending Machine Staff Password"
+    msg["From"] = sender
+    msg["To"] = receiver
+
+    try:
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+            server.login(sender, app_password)
+            server.send_message(msg)
+
+        return "Password emailed successfully."
+
+    except Exception as e:
+        return f"Error: {e}"
+
+@app.route("/forgotpassword", methods=["GET", "POST"])
 def forgot_password():
-    return redirect("https://forms.gle/UQewp7yneGsjfZ6M9")
+    message = None
 
-@app.route("/createAccount")
+    if request.method == "POST":
+        username = request.form.get("username")
+        message = send_password_email(username)
+
+    return render_template('forgotpassword.html', message=message)
+
+
+security_keys = [
+    "UMB-7KQ2-M9XA",
+    "VEND-4PZ8-LT21",
+    "KEY-6XMN-3A8F",
+    "STAFF-92KD-R7QW",
+    "ADMIN-J4V2-QP90"
+]
+
+approved_users = []
+
+def validInputs(security_key, username):
+    if not security_key:
+        return "Please enter the security key."
+
+    if not username:
+        return "Please enter your staff username."
+
+    if security_key not in security_keys:
+        return "Please Enter a valid Key."
+
+    if not username:
+        return "Please enter a username."
+
+
+    if username in approved_users:
+        return "This user already exists."
+
+    approved_users.append(username)
+
+    emailreceiver = username + "@umbc.edu"
+
+    msg = EmailMessage()
+    msg.set_content("Your vending machine staff password is: umbc123")
+    msg["Subject"] = "Vending Machine New User Staff Password"
+    msg["From"] = sender
+    msg["To"] = emailreceiver
+
+    try:
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+            server.login(sender, app_password)
+            server.send_message(msg)
+
+        return "Account created. Password emailed successfully."
+
+    except Exception as e:
+        return f"Error: {e}"
+
+
+@app.route("/createaccount", methods=["GET", "POST"])
 def createAccount():
+    message = None
 
-    return render_template(createAccount.html)
+    if request.method == "POST":
+        security_key = request.form.get("security_key")
+        username = request.form.get("username")
+
+        message = validInputs(security_key, username)
+
+    return render_template("createaccount.html", message=message)
+
 if __name__ == '__main__':
     app.run(debug=True)
