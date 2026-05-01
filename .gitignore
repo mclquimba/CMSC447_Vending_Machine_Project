@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 __pycache__/
 *.pyc
 .env
 .DS_Store
+=======
+.env
+venv447/
+>>>>>>> origin/updated_backend
