@@ -1,5 +1,0 @@
-flask>=3.0
-sqlalchemy>=2.0
-mysql-connector-python>=9.0
-pytz
-python-dotenv
