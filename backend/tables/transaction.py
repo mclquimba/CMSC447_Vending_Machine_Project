@@ -4,7 +4,7 @@ from decimal import Decimal
 from datetime import datetime
 from pytz import timezone
 
-from tables import Base
+from backend.tables.base import Base
 
 class Transaction(Base):
     __tablename__ = "transactions"

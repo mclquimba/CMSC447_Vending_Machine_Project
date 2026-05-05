@@ -4,7 +4,7 @@ import enum
 
 MAX_USERNAME_CHARS = 500
 
-from tables import Base
+from backend.tables.base import Base
 
 class Role(enum.Enum):
     ADMIN = "Administrator"

@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 from decimal import Decimal
 
-from tables.transaction import Transaction
-from utilities.error_checking import ErrorChecking as ec
+from backend.tables.transaction import Transaction
+from backend.utilities.error_checking import ErrorChecking as ec
 
 def record_transaction(session: Session, item_price: str, amount: str) -> Transaction:
     errors = {}

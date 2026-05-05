@@ -1,7 +1,7 @@
 from sqlalchemy import select, func
-from database import Session, engine
-from tables.vm_slot import VendingMachineSlot, DEFAULT_MAX_QUANTITY, DEFAULT_CUR_QUANTITY, DEFAULT_THRESHOLD, Status
-from tables.base import Base
+from backend.database import Session, engine
+from backend.tables.vm_slot import VendingMachineSlot, DEFAULT_MAX_QUANTITY, DEFAULT_CUR_QUANTITY, DEFAULT_THRESHOLD, Status
+from backend.tables.base import Base
 
 SLOT_VALUES = [
     "A0", "A2", "A4", "A6",

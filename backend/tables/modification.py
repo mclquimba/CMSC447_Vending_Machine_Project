@@ -6,7 +6,7 @@ from decimal import Decimal
 from pytz import timezone
 import enum
 
-from tables import Base
+from backend.tables.base import Base
 
 MAX_NAME_CHARS = 200
 MAX_SLOT_CHARS = 10

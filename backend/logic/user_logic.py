@@ -1,8 +1,8 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from tables.user import User, Role
-from utilities.error_checking import ErrorChecking as ec
+from backend.tables.user import User, Role
+from backend.utilities.error_checking import ErrorChecking as ec
 
 def get_username(session: Session, username: str) -> bool:
     query = select(User.username).where(User.username == username)

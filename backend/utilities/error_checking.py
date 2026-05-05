@@ -1,9 +1,9 @@
 from typing import Optional
 from decimal import Decimal, InvalidOperation
 
-from tables.vm_slot import MAX_NAME_CHARS, MAX_SLOT_CHARS, DEFAULT_CUR_QUANTITY, DEFAULT_MAX_QUANTITY, DEFAULT_THRESHOLD
-from tables.user import MAX_USERNAME_CHARS, Role
-from seed import SLOT_VALUES
+from backend.tables.vm_slot import MAX_NAME_CHARS, MAX_SLOT_CHARS, DEFAULT_CUR_QUANTITY, DEFAULT_MAX_QUANTITY, DEFAULT_THRESHOLD
+from backend.tables.user import MAX_USERNAME_CHARS, Role
+from backend.seed import SLOT_VALUES
 
 class ErrorChecking:
     # Not Optional

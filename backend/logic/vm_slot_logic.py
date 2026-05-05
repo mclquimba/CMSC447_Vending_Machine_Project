@@ -3,10 +3,10 @@ from sqlalchemy.orm import Session
 from decimal import Decimal
 from typing import Optional
 
-from tables.vm_slot import VendingMachineSlot, Status
-import logic.modification_logic as mod
+from backend.tables.vm_slot import VendingMachineSlot, Status
+import backend.logic.modification_logic as mod
 
-from utilities.error_checking import ErrorChecking as ec
+from backend.utilities.error_checking import ErrorChecking as ec
 
 def get_slot(session: Session, slot_value: str, errors_slot: list[str]) -> Optional[VendingMachineSlot]:
     slot_stripped = slot_value.strip().upper()

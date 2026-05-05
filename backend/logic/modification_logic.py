@@ -2,8 +2,8 @@ from sqlalchemy.orm import Session
 from typing import Optional
 from decimal import Decimal
 
-from tables.modification import Modification, ModType
-from tables.vm_slot import VendingMachineSlot
+from backend.tables.modification import Modification, ModType
+from backend.tables.vm_slot import VendingMachineSlot
 
 def _mod_manual(session: Session, slot: VendingMachineSlot, new_item_name: Optional[str], new_item_price: Optional[Decimal], new_quantity_cur: int, new_threshold: int) -> bool:
     if slot is None:
