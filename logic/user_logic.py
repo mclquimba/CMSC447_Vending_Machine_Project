@@ -3,6 +3,26 @@ from sqlalchemy.orm import Session
 
 from tables.user import User, Role
 from utilities.error_checking import ErrorChecking as ec
+from datetime import datetime
+
+
+def get_user(session: Session, username: str):
+    query = select(User).where(User.username == username)
+    return session.scalars(query).first()
+
+
+def update_last_login(session: Session, username: str):
+    user = get_user(session, username)
+
+    if user is None:
+        return None
+
+    previous_login = user.last_login
+    user.last_login = datetime.now()
+
+    session.flush()
+
+    return previous_login
 
 def get_username(session: Session, username: str) -> bool:
     query = select(User.username).where(User.username == username)
@@ -35,7 +55,7 @@ def add_user(session: Session, username: str, role: Role) -> User:
     
     ec.check_username_nop(username, errors_username)
     
-    for field, field_errors in (("username", errors_username)):
+    for field, field_errors in [("username", errors_username), ("role", errors_role)]:
         if field_errors:
             errors[field] = field_errors
             
@@ -82,7 +102,7 @@ def delete_user(session: Session, user_id: str) -> dict:
     
     ec.check_user_id_nop(user_id_stripped, errors_user_id)
     
-    for field, field_errors in (("user_id", errors_user_id)):
+    for field, field_errors in [("user_id", errors_user_id)]:
         if field_errors:
             errors[field] = field_errors
             

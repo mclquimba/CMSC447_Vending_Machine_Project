@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<title>Available Inventory</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<h1>Available Inventory</h1>
+
+<section>
+
+<h2>Items Fully Stocked</h2>
+
+<table class="inventory-table">
+  <tr>
+    <th>Slot</th>
+    <th>Item</th>
+    <th>Quantity</th>
+    <th>Max</th>
+    <th>Price</th>
+    <th>Status</th>
+    <th>Buy</th>
+  </tr>
+            
+  {% for item in items %}
+  <tr>
+    <td> {{ item.slot_value }} </td>
+    <td> {%if item.item_name %}
+      {{ item.item_name}}
+    {% else %} 
+      Empty
+    {% endif %} </td>
+    <td> {{ item.quantity_cur }} </td>
+    <td> {{ item.max_max }} </td>
+    <td>
+                {% if item.item_price %}
+                    ${{ "%.2f"|format(item.item_price) }}
+                {% else %}
+                    N/A
+                {% endif %}
+            </td>
+    <td class = "
+		 {% if item.status == 'GOOD' %} good
+		 {% elif item.status == 'LOW' %} low
+		{% else %} out
+		{% endif %}">
+      {{ item.status.value }}
+    </td>
+    
+    <td>
+      {% if item.item_price and item.quantity_cur > 0 %}
+      <a href = "/buy/{{ item.slot }}" class = "table-btn"> Buy
+      </a>
+      {% else %}
+      <span>N/A</span>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+  </table>
+
+<div style = "margin-top: 20px; text-align: center;">
+
+{% if page > 1 %}
+  <a href = "/stock?page={{ page - 1}}" class="table-btn">Previous</a>
+{% endif %}
+{% if page < 2 %}
+<a href = "/stock?page={{ page + 1}}" class="table-btn"> Next</a>
+{% endif %}
+</section>
+</div>
+
+<section class="action-links">
+
+<a href="/dashboard" class="action-box">Back to Dashboard</a>
+
+<a href="/restock" class="action-box">Go to Restock</a>
+
+</section>
+
+</body>
+
+</html>

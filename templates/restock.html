@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Restock Inventory</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<h1>Restock Inventory</h1>
+
+  <section>
+    <h2>Items Needing Attention</h2>
+
+    <table class="inventory-table">
+    <tr>
+      <th>Slot</th>
+      <th>Item</th>
+      <th>Quantity</th>
+      <th> Price </th>
+      <th>Max</th>
+      <th>Status</th>
+    {% for item in items %}
+
+<form action="/update_item/{{ item.slot }}" method="POST">
+<tr>
+    <td>{{ item.slot }}</td>
+    <td>{{ item.item }}</td>
+
+    <td>
+        <input type="number" name="quantity" value="{{ item.quantity }}" min="0">
+    </td>
+
+    <td>${{ "%.2f"|format(item.price) }}</td>
+
+    <td>
+        <input type="number" name="max" value="{{ item.max }}" min="1">
+    </td>
+
+    <td class="
+        {% if item.status == 'GOOD' %}good
+        {% elif item.status == 'LOW' %}low
+        {% else %}out
+        {% endif %}
+    ">
+        {{ item.status }}
+    </td>
+
+    <td>
+    <button type="submit" class="table-btn">Save</button>
+</td>
+
+</tr>
+</form>
+
+{% endfor %}
+</table>
+</section>
+
+
+<section class="action-links">
+<a href="/dashboard" class="action-box">Back to Dashboard</a>
+<a href="/stock" class="action-box">View Available Stock</a>
+  </section>
+    </body>
+      </html>
+
+    
+      
+
+
+      

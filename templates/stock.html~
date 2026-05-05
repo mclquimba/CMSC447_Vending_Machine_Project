@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<title>Available Inventory</title>
+
+</head>
+
+<body>
+
+<h1>Available Inventory</h1>
+
+<h2>Items Fully Stocked</h2>
+
+<table border="1">
+
+<tr>
+
+<th>Slot</th>
+
+<th>Item</th>
+
+<th>Quantity</th>
+
+<th>Max</th>
+
+<th>Status</th>
+
+</tr>
+
+<tr>
+
+<td>A1</td>
+
+<td>Doritos</td>
+
+<td>10</td>
+
+<td>10</td>
+
+<td>GOOD</td>
+
+</tr>
+
+<tr>
+
+<td>B3</td>
+
+<td>Snickers</td>
+
+<td>8</td>
+
+<td>8</td>
+
+<td>GOOD</td>
+
+</tr>
+
+<tr>
+
+<td>C2</td>
+
+<td>Water Bottle</td>
+
+<td>6</td>
+
+<td>6</td>
+
+<td>GOOD</td>
+
+</tr>
+
+<tr>
+
+<td>D4</td>
+
+<td>Granola Bar</td>
+
+<td>12</td>
+
+<td>12</td>
+
+<td>GOOD</td>
+
+</tr>
+
+<tr>
+
+<td>E6</td>
+
+<td>Notebook</td>
+
+<td>5</td>
+
+<td>5</td>
+
+<td>GOOD</td>
+
+</tr>
+
+</table>
+
+<br>
+
+<a href="dashboard.html">
+<button>Back to Dashboard</button>
+</a>
+
+</body>
+
+</html>

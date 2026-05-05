@@ -1,5 +1,7 @@
-from sqlalchemy import Enum, String
+from sqlalchemy import Enum, String, DateTime
 from sqlalchemy.orm import Mapped, mapped_column
+from datetime import datetime
+from typing import Optional
 import enum
 
 MAX_USERNAME_CHARS = 500
@@ -19,3 +21,13 @@ class User(Base):
     
     def __repr__(self):
         return f"User(user_id={self.user_id}, username={self.username}, role={self.role})"
+
+    last_login: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
+
+    def __repr__(self):
+        return (
+            f"User(user_id={self.user_id}, "
+            f"username={self.username}, "
+            f"role={self.role}, "
+            f"last_login={self.last_login})"
+        )

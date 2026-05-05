@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Account Setup</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="AccountSetup">
+        <h1>Account Setup</h1>
+        <p>This process will help you set up your UMBC staff account.</p>
+
+        <form method="POST">
+            <input type="password" name="security_key" placeholder="Security Key">
+            <input type="text" name="username" placeholder="Staff username">
+            <button type="submit">Create Account</button>
+        </form>
+
+        {% if message %}
+            <p class="form-message" >{{ message }}</p>
+        {% endif %}
+
+        <a href="/" class="forgot">Back to Login</a>
+    </div>
+</body>
+</html>

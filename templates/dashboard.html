@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{url_for('static', filename = 'style.css') }}">
+</head>
+
+<body>
+
+<div class="dashboard-shell">
+
+    <aside class="sidebar">
+        <h2 class="sidebar-logo">UMBC Vending</h2>
+
+        <a href="/dashboard" class="sidebar-link active">Dashboard</a>
+        <a href="/stock" class = "sidebar-link"> Inventory</a>
+        <a href="/restock" class="sidebar-link">Restock</a>
+        <a href="#" class="sidebar-link">Transactions</a>
+        <a href="#" class="sidebar-link">Staff</a>
+        <a href="#" class="sidebar-link">Reports</a>
+        <a href="/logout" class="sidebar-link logout">Log Out</a>
+    </aside>
+
+    <main class="dashboard-main">
+
+        <div class="dashboard-header">
+            <div>
+                <h1>Dashboard</h1>
+                <p>Monitor vending machine inventory and staff activity.</p>
+            </div>
+        </div>
+
+        <section class="stat-grid">
+            <div class="stat-card">
+                <p>Items Out</p>
+                <h2>{{ items_out }}</h2>
+            </div>
+
+            <div class="stat-card">
+                <p>Low Items</p>
+                <h2>{{ low_items }}</h2>
+            </div>
+
+            <div class="stat-card">
+                <p>Current Staff</p>
+                <h2>{{ staff_name }}</h2>
+            </div>
+
+            <div class="stat-card">
+                <p>Previous Staff</p>
+                <h2>{{ previous_staff }}</h2>
+            </div>
+        </section>
+
+        <section class="dashboard-grid">
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>Inventory Distribution</h2>
+                    <span>By category</span>
+                </div>
+
+                <div class="bar-row">
+                    <span>School Supplies</span>
+                    <div class="bar-track"><div class="bar-fill" style="width: 75%;"></div></div>
+                    <small>75%</small>
+                </div>
+
+                <div class="bar-row">
+                    <span>Hygiene</span>
+                    <div class="bar-track"><div class="bar-fill" style="width: 55%;"></div></div>
+                    <small>55%</small>
+                </div>
+
+                <div class="bar-row">
+                    <span>Medicine</span>
+                    <div class="bar-track"><div class="bar-fill" style="width: 40%;"></div></div>
+                    <small>40%</small>
+                </div>
+
+                <div class="bar-row">
+                    <span>Tech</span>
+                    <div class="bar-track"><div class="bar-fill" style="width: 30%;"></div></div>
+                    <small>30%</small>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>System Activity</h2>
+                    <span>Staff summary</span>
+                </div>
+
+                <div class="activity-line">
+                    <span>Current Time</span>
+                    <strong>{{ last_checked }}</strong>
+                </div>
+
+                <div class="activity-line">
+                    <span>Previous Login</span>
+                    <strong>{{ previous_login }}</strong>
+                </div>
+
+                <div class="activity-line">
+                    <span>Machine Status</span>
+                    <strong>Operational</strong>
+                </div>
+            </div>
+        </section>
+
+        <section class="action-panel">
+            <a href="/stock" class="dashboard-action">View Stock</a>
+            <a href="/restock" class="dashboard-action">Restock Items</a>
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>
+
+<!-- <body>
+
+    <h1>Vending Machine Summary</h1>
+    <div style="text-align: right; margin-bottom: 10px;">
+    <a href="/logout" class="action-box">Log Out</a>
+</div>
+
+<section>
+    <h2>Staff Summary</h2>
+
+    <table class = "inventory-table">
+        <tr>
+            <th>Metric</th>
+            <th>Value</th>
+        </tr>
+        <tr>
+            <td>Items out of stock</td>
+            <td>{{items_out}}</td>
+        </tr>
+        <tr>
+            <td>Low items</td>
+            <td>{{low_items}}</td>
+        </tr>
+        <tr>
+            <td> Current time </td>
+            <td> {{last_checked}}</td>
+        <tr>
+        <tr>
+            <td>Current staff member</td>
+            <td>{{staff_name}}</td>
+        </tr>
+        <tr>
+            <td> Previous Staff member</td>
+            <td> {{previous_staff}}</td>
+        </tr>
+        <tr>
+            <td>Previous Login</td>
+            <td>{{ previous_login }}
+        </tr>
+    </table>
+    </section>
+
+    <section>
+        <h2>System Actions</h2>
+	<div class = "action-links">
+        <a href="/stock" class = "action-box"> View Stock</a>
+        <a href="/restock" class = "action-box">  Restock Items</a>
+    </div>
+    </section>
+
+</body>
+</html> -->

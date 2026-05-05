@@ -57,7 +57,7 @@ class ErrorChecking:
             errors_slot.append("Slot field can not be empty.")
             num_errors += 1
         elif slot_stripped not in SLOT_VALUES:
-            errors_slot.append(f"{slot_stripped} not in {", ".join(SLOT_VALUES)}.")
+            errors_slot.append(f"{slot_stripped} not in {' , ' .join(SLOT_VALUES)}.")
             num_errors += 1
         
         return num_errors
