@@ -128,3 +128,76 @@ def delete_user(session: Session, user_id: str) -> dict:
     session.flush()
     
     return user_info
+
+    def promote_user_to_admin(session: Session, username: str) -> User:
+        errors = {}
+        errors_username = []
+
+        ec.check_username_nop(username, errors_username)
+
+        if errors_username:
+            errors["username"] = errors_username
+            raise ValueError(errors)
+
+        user = get_user(session, username)
+
+        if user is None:
+            errors_username.append(f"User {username} does not exist.")
+            errors["username"] = errors_username
+            raise ValueError(errors)
+
+        user.role = Role.ADMIN
+        session.flush()
+
+        return user
+
+
+def is_admin(session: Session, username: str) -> bool:
+    user = get_user(session, username)
+
+    if user is None:
+        return False
+
+    return user.role == Role.ADMIN
+
+
+def list_users(session: Session) -> list[User]:
+    query = select(User).order_by(User.user_id)
+    return list(session.scalars(query).all())
+
+
+def promote_user_to_admin(session: Session, username: str) -> User:
+    errors = {}
+    errors_username = []
+
+    ec.check_username_nop(username, errors_username)
+
+    if errors_username:
+        errors["username"] = errors_username
+        raise ValueError(errors)
+
+    user = get_user(session, username)
+
+    if user is None:
+        errors_username.append(f"User {username} does not exist.")
+        errors["username"] = errors_username
+        raise ValueError(errors)
+
+    user.role = Role.ADMIN
+    session.flush()
+
+    return user
+
+
+def is_admin(session: Session, username: str) -> bool:
+    user = get_user(session, username)
+
+    if user is None:
+        return False
+
+    return user.role == Role.ADMIN
+
+
+def list_users(session: Session) -> list[User]:
+    query = select(User).order_by(User.user_id)
+    return list(session.scalars(query).all())
