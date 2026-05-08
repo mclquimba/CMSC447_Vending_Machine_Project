@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Staff Management</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}" class = "site-logo" alt = "UMBC Logo">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="dashboard-shell">
+
+    <aside class="sidebar">
+         <div class="sidebar-logo">
+    <img src="{{ url_for('static', filename='images/favicon.png') }}"
+         class="sidebar-shield"
+         alt="UMBC Shield">
+
+    <img src="{{ url_for('static', filename='images/umbcword.png') }}"
+         class="sidebar-wordmark"
+         alt="UMBC Word Logo">
+</div>
+
+        <a href="/dashboard" class="sidebar-link">Dashboard</a>
+        <a href="/stock" class="sidebar-link">Inventory</a>
+
+        <a href="/restock" class="sidebar-link">
+            Restock
+            {% if restock_alerts and restock_alerts > 0 %}
+                <span class="sidebar-badge">{{ restock_alerts }}</span>
+            {% endif %}
+        </a>
+
+        <a href="/transactions" class="sidebar-link">Transactions</a>
+        <a href="/staff" class="sidebar-link active">Staff</a>
+        <a href="/reports" class="sidebar-link">Reports</a>
+        <a href="/logout" class="sidebar-link logout">Log Out</a>
+    </aside>
+
+    <main class="dashboard-main">
+
+        <div class="dashboard-header">
+            <div>
+                <h1>Staff Management</h1>
+                <p>View staff access, request admin permissions, and manage approved users.</p>
+            </div>
+        </div>
+
+        <section class="stat-grid">
+            <div class="stat-card">
+                <p>Current User</p>
+                <h2>{{ current_user.username }}</h2>
+            </div>
+
+            <div class="stat-card">
+                <p>Current Role</p>
+                <h2>{{ current_user.role.value }}</h2>
+            </div>
+
+            <div class="stat-card">
+    <p>Admin Access</p>
+
+    <h2 class="{{ 'status-active' if admin_status else 'status-locked' }}">
+        {% if admin_status %}
+            Active
+        {% else %}
+            Locked
+        {% endif %}
+    </h2>
+</div>
+
+            <div class="stat-card">
+                <p>Restock Alerts</p>
+                <h2>{{ restock_alerts }}</h2>
+            </div>
+        </section>
+
+        <section class="stock-panel">
+
+            <div class="panel-header">
+                <h2>Admin Access</h2>
+                <span>Enter admin key to unlock staff controls</span>
+            </div>
+
+            {% if not admin_status %}
+                <p class="alert-text">
+                    You currently have staff access. Enter the admin key below to enable user management tools.
+                </p>
+
+                <form method="POST" class="admin-key-form">
+                    <label>Admin Key</label>
+                    <input type="password" name="admin_key" placeholder="Enter admin key">
+                    <button type="submit" class="dashboard-action">Unlock Admin Access</button>
+                </form>
+            {% else %}
+                <p class="alert-text">
+                    Admin access is active. You can view and manage staff users below.
+                </p>
+            {% endif %}
+
+            {% if message %}
+                <p class="form-message">{{ message }}</p>
+            {% endif %}
+
+        </section>
+
+        {% if admin_status %}
+        <section class="stock-panel" style="margin-top: 20px;">
+
+            <div class="panel-header">
+                <h2>Approved Staff Users</h2>
+                <span>{{ users|length }} user(s)</span>
+            </div>
+
+            <table class="inventory-table modern-table">
+                <tr>
+                    <th>User ID</th>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>Last Login</th>
+                    <th>Action</th>
+                </tr>
+
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.user_id }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.role.value }}</td>
+
+                    <td>
+                        {% if user.last_login %}
+                            {{ user.last_login.strftime("%A, %B %d • %I:%M %p") }}
+                        {% else %}
+                            Never
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if user.username != current_user.username %}
+                        
+                            <form action="/staff/delete/{{ user.user_id }}" method="POST" style="display:inline;">
+                        
+                            <button type="submit" class="table-btn">Delete</button>
+                     
+                        </form>
+
+                        {% else %}
+                        <a class = "newerror" > {{user}} </a>
+                            <span class="muted-text">Current User</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+
+        </section>
+        {% endif %}
+
+    </main>
+
+</div>
+
+</body>
+</html>
