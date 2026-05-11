@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -33,7 +33,6 @@
         <input type="number" name="quantity" value="{{ item.quantity }}" min="0">
     </td>
 
-    <td>${{ "%.2f"|format(item.price) }}</td>
 
     <td>
         <input type="number" name="max" value="{{ item.max }}" min="1">
@@ -71,4 +70,129 @@
       
 
 
-      
+       -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Restock Inventory</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}" class = "site-logo" alt = "UMBC Logo">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="dashboard-shell">
+
+    <aside class="sidebar">
+         <div class="sidebar-logo">
+    <img src="{{ url_for('static', filename='images/favicon.png') }}"
+         class="sidebar-shield"
+         alt="UMBC Shield">
+
+    <img src="{{ url_for('static', filename='images/umbcword.png') }}"
+         class="sidebar-wordmark"
+         alt="UMBC Word Logo">
+</div>
+
+        <a href="/dashboard" class="sidebar-link">Dashboard</a>
+        <a href="/stock" class="sidebar-link">Inventory</a>
+
+        <a href="/restock" class="sidebar-link active">
+            Restock
+            {% if restock_alerts and restock_alerts > 0 %}
+                <span class="sidebar-badge">{{ restock_alerts }}</span>
+            {% endif %}
+        </a>
+
+        <a href="/transactions" class="sidebar-link">Transactions</a>
+        <a href="/staff" class="sidebar-link">Staff</a>
+        <a href="/reports" class="sidebar-link">Reports</a>
+        <a href="/logout" class="sidebar-link logout">Log Out</a>
+    </aside>
+
+    <main class="dashboard-main">
+
+        <div class="dashboard-header">
+            <div>
+                <h1>Restock Inventory</h1>
+                <p>Review low-stock items and add new quantities to the vending machine.</p>
+            </div>
+        </div>
+
+        <section class="stock-panel">
+
+            <div class="panel-header">
+                <h2>Items Needing Attention</h2>
+                <span>{{ restock_alerts }} alert(s)</span>
+            </div>
+
+            <table class="inventory-table modern-table">
+                <tr>
+                    <th>Slot</th>
+                    <th>Item</th>
+                    <th>Current</th>
+                    <th>Max</th>
+                    <th>Threshold</th>
+                    <th>Status</th>
+                    <th>Restock</th>
+                </tr>
+
+                {% for item in items %}
+                <tr>
+                    <td>{{ item.slot_value }}</td>
+
+                    <td>
+                        {% if item.item_name %}
+                            {{ item.item_name }}
+                        {% else %}
+                            Empty
+                        {% endif %}
+                    </td>
+
+                    <td>{{ item.quantity_cur }}</td>
+                    <td>{{ item.quantity_max }}</td>
+                    <td>{{ item.threshold }}</td>
+
+                    <td>
+                        <span class="
+                            status-pill
+                            {% if item.status.value == 'GOOD' %}status-good
+                            {% elif item.status.value == 'LOW' %}status-low
+                            {% else %}status-out
+                            {% endif %}
+                        ">
+                            {{ item.status.value }}
+                        </span>
+                    </td>
+
+                    <td>
+                        <details class="edit-restock">
+                            <summary class="table-btn">Edit</summary>
+
+                            <form action="/update_item/{{ item.slot_value }}" method="POST" class="restock-form">
+                                <label>Add Quantity</label>
+                                <input type="number" name="amount" min="1" placeholder="Amount">
+
+                                <button type="submit" class="table-btn save-btn">Save</button>
+                            </form>
+                        </details>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+
+            {% if not items %}
+                <p class="empty-message">No items currently need restocking.</p>
+            {% endif %}
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>
