@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Transactions</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}" class = "site-logo" alt = "UMBC Logo">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="dashboard-shell">
+
+    <aside class="sidebar">
+         <div class="sidebar-logo">
+    <img src="{{ url_for('static', filename='images/favicon.png') }}"
+         class="sidebar-shield"
+         alt="UMBC Shield">
+
+    <img src="{{ url_for('static', filename='images/umbcword.png') }}"
+         class="sidebar-wordmark"
+         alt="UMBC Word Logo">
+</div>
+
+        <a href="/dashboard" class="sidebar-link">Dashboard</a>
+        <a href="/stock" class="sidebar-link">Inventory</a>
+
+        <a href="/restock" class="sidebar-link">
+            Restock
+            {% if restock_alerts and restock_alerts > 0 %}
+                <span class="sidebar-badge">{{ restock_alerts }}</span>
+            {% endif %}
+        </a>
+
+        <a href="/transactions" class="sidebar-link active">Transactions</a>
+        <a href="/staff" class="sidebar-link">Staff</a>
+        <a href="/reports" class="sidebar-link">Reports</a>
+        <a href="/logout" class="sidebar-link logout">Log Out</a>
+    </aside>
+
+    <main class="dashboard-main">
+
+        <div class="dashboard-header">
+            <div>
+                <h1>Transactions</h1>
+                <p>View logged vending machine purchase activity.</p>
+            </div>
+        </div>
+
+        <section class="stock-panel">
+
+            <div class="panel-header">
+                <h2>Transaction History</h2>
+                <span>{{ transactions|length }} record(s)</span>
+            </div>
+
+            <table class="inventory-table modern-table">
+                <tr>
+                    <th>ID</th>
+                    <th>Item Price</th>
+                    <th>Amount</th>
+                    <th>Timestamp</th>
+                </tr>
+
+                {% for transaction in transactions %}
+                <tr>
+                    <td>{{ transaction.id }}</td>
+                    <td>${{ "%.2f"|format(transaction.item_price) }}</td>
+                    <td>{{ transaction.amount }}</td>
+                    <td>{{ transaction.timestamp.strftime("%A, %B %d • %I:%M %p") }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+
+            {% if not transactions %}
+                <p class="empty-message">No transactions have been logged yet.</p>
+            {% endif %}
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>
