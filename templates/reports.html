@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title> Reports </title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}" class = "site-logo" alt = "UMBC Logo">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="dashboard-shell">
+
+    <aside class="sidebar">
+         <div class="sidebar-logo">
+    <img src="{{ url_for('static', filename='images/favicon.png') }}"
+         class="sidebar-shield"
+         alt="UMBC Shield">
+
+    <img src="{{ url_for('static', filename='images/umbcword.png') }}"
+         class="sidebar-wordmark"
+         alt="UMBC Word Logo">
+</div>
+
+        <a href="/dashboard" class="sidebar-link">Dashboard</a>
+        <a href="/stock" class="sidebar-link">Inventory</a>
+
+        <a href="/restock" class="sidebar-link">
+            Restock
+            {% if restock_alerts and restock_alerts > 0 %}
+                <span class="sidebar-badge">{{ restock_alerts }}</span>
+            {% endif %}
+        </a>
+
+        <a href="/transactions" class="sidebar-link">Transactions</a>
+        <a href="/staff" class="sidebar-link">Staff</a>
+        <a href="/reports" class="sidebar-link active">Reports</a>
+        <a href="/logout" class="sidebar-link logout">Log Out</a>
+    </aside>
+
+    <main class="dashboard-main">
+
+        <div class="dashboard-header">
+            <div>
+                <h1>Reports</h1>
+                <p>Review vending machine stock alerts and notify staff when restocking is required.</p>
+            </div>
+        </div>
+
+        <section class="stat-grid">
+            <div class="stat-card">
+                <p>Out of Stock</p>
+                <h2>{{ out_count }}</h2>
+            </div>
+
+            <div class="stat-card">
+                <p>Low Stock</p>
+                <h2>{{ low_count }}</h2>
+            </div>
+
+            <div class="stat-card">
+                <p>Total Alerts</p>
+                <h2>{{ restock_alerts }}</h2>
+            </div>
+        </section>
+
+        <section class="stock-panel">
+
+            <div class="panel-header">
+                <h2>Restock Email Alert</h2>
+                <span>Triggers when out-of-stock items reach {{ threshold }}</span>
+            </div>
+
+            {% if out_count >= out_threshold %}
+                <p class="alert-text danger">
+                    Critical restock condition met. The machine has {{ out_count }} out-of-stock item(s).
+                </p>
+            {% else %}
+                <p class="alert-text">
+                    Current out-of-stock count is {{ out_count }}. Email alert threshold has not been reached.
+                </p>
+            {% endif %}
+
+            <form method="POST">
+                <button type="submit" class="dashboard-action">
+                    Send Restock Alert Email
+                </button>
+            </form>
+
+            {% if message %}
+                <p class="form-message">{{ message }}</p>
+            {% endif %}
+
+        </section>
+
+        <section class="stock-panel" style="margin-top: 20px;">
+
+            <div class="panel-header">
+                <h2>Items Needing Attention</h2>
+                <span>{{ restock_alerts }} total</span>
+            </div>
+
+            <table class="inventory-table modern-table">
+                <tr>
+                    <th>Slot</th>
+                    <th>Item</th>
+                    <th>Current</th>
+                    <th>Max</th>
+                    <th>Status</th>
+                </tr>
+
+                {% for item in out_items %}
+                <tr>
+                    <td>{{ item.slot_value }}</td>
+                    <td>{{ item.item_name }}</td>
+                    <td>{{ item.quantity_cur }}</td>
+                    <td>{{ item.quantity_max }}</td>
+                    <td><span class="status-pill status-out">OUT</span></td>
+                </tr>
+                {% endfor %}
+
+                {% for item in low_items %}
+                <tr>
+                    <td>{{ item.slot_value }}</td>
+                    <td>{{ item.item_name }}</td>
+                    <td>{{ item.quantity_cur }}</td>
+                    <td>{{ item.quantity_max }}</td>
+                    <td><span class="status-pill status-low">LOW</span></td>
+                </tr>
+                {% endfor %}
+            </table>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>
