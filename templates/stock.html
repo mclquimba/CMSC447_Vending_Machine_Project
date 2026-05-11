@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 
 <html lang="en">
 
@@ -16,7 +16,20 @@
 
 <section>
 
+
 <h2>Items Fully Stocked</h2>
+
+ <aside class="sidebar">
+        <h2 class="sidebar-logo">UMBC Vending</h2>
+
+        <a href="/dashboard" class="sidebar-link active">Dashboard</a>
+        <a href="/stock" class = "sidebar-link"> Inventory</a>
+        <a href="/restock" class="sidebar-link">Restock</a>
+        <a href="#" class="sidebar-link">Transactions</a>
+        <a href="#" class="sidebar-link">Staff</a>
+        <a href="#" class="sidebar-link">Reports</a>
+        <a href="/logout" class="sidebar-link logout">Log Out</a>
+    </aside>
 
 <table class="inventory-table">
   <tr>
@@ -38,7 +51,7 @@
       Empty
     {% endif %} </td>
     <td> {{ item.quantity_cur }} </td>
-    <td> {{ item.max_max }} </td>
+    <td> {{ item.quantity_max }} </td>
     <td>
                 {% if item.item_price %}
                     ${{ "%.2f"|format(item.item_price) }}
@@ -87,4 +100,135 @@
 
 </body>
 
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Available Inventory</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}" class = "site-logo" alt = "UMBC Logo">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="dashboard-shell">
+
+    <aside class="sidebar">
+         <div class="sidebar-logo">
+    <img src="{{ url_for('static', filename='images/favicon.png') }}"
+         class="sidebar-shield"
+         alt="UMBC Shield">
+
+    <img src="{{ url_for('static', filename='images/umbcword.png') }}"
+         class="sidebar-wordmark"
+         alt="UMBC Word Logo">
+</div>
+
+        <a href="/dashboard" class="sidebar-link">Dashboard</a>
+        <a href="/stock" class="sidebar-link active">Inventory</a>
+        <a href="/restock" class="sidebar-link">
+    Restock
+    {% if restock_alerts and restock_alerts > 0 %}
+        <span class="sidebar-badge">{{ restock_alerts }}</span>
+    {% endif %}
+</a>
+        <a href="/transactions" class="sidebar-link">Transactions</a>
+        <a href="/staff" class="sidebar-link">Staff</a>
+        <a href="/reports" class="sidebar-link">Reports</a>
+        <a href="/logout" class="sidebar-link logout">Log Out</a>
+    </aside>
+
+    <main class="dashboard-main">
+
+        <div class="dashboard-header">
+            <div>
+                <h1>Available Inventory</h1>
+                <p>View vending machine slots, item quantities, pricing, and stock status.</p>
+            </div>
+        </div>
+
+        <section class="stock-panel">
+
+            <div class="panel-header">
+                <h2>Vending Machine Stock</h2>
+                <span>Page {{ page }}</span>
+            </div>
+
+            <table class="inventory-table modern-table">
+                <tr>
+                    <th>Slot</th>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Max</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                    <th>Buy</th>
+                </tr>
+
+                {% for item in items %}
+                <tr>
+                    <td>{{ item.slot_value }}</td>
+
+                    <td>
+                        {% if item.item_name %}
+                            {{ item.item_name }}
+                        {% else %}
+                            Empty
+                        {% endif %}
+                    </td>
+
+                    <td>{{ item.quantity_cur }}</td>
+                    <td>{{ item.quantity_max }}</td>
+
+                    <td>
+                        {% if item.item_price %}
+                            ${{ "%.2f"|format(item.item_price) }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        <span class="
+                            status-pill
+                            {% if item.status.value == 'GOOD' %}status-good
+                            {% elif item.status.value == 'LOW' %}status-low
+                            {% else %}status-out
+                            {% endif %}
+                        ">
+                            {{ item.status.value }}
+                        </span>
+                    </td>
+
+                    <td>
+                        {% if item.item_price and item.quantity_cur > 0 %}
+                            <a href="/buy/{{ item.slot_value }}?page={{ page }}" class="table-btn">Buy</a>
+                        {% else %}
+                            <span class="muted-text">N/A</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+
+            <div class="pagination-actions">
+                {% if page > 1 %}
+                    <a href="/stock?page={{ page - 1 }}" class="table-btn">Previous</a>
+                {% endif %}
+
+                {% if page < 2 %}
+                    <a href="/stock?page={{ page + 1 }}" class="table-btn">Next</a>
+                {% endif %}
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
 </html>
