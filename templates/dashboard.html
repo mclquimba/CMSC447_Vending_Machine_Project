@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard</title>
+    <title> Dashboard</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}" class = "site-logo" alt = "UMBC Logo">
     <link rel="stylesheet" href="{{url_for('static', filename = 'style.css') }}">
 </head>
 
@@ -12,14 +13,28 @@
 <div class="dashboard-shell">
 
     <aside class="sidebar">
-        <h2 class="sidebar-logo">UMBC Vending</h2>
+        
+        <div class="sidebar-logo">
+    <img src="{{ url_for('static', filename='images/favicon.png') }}"
+         class="sidebar-shield"
+         alt="UMBC Shield">
 
+    <img src="{{ url_for('static', filename='images/umbcword.png') }}"
+         class="sidebar-wordmark"
+         alt="UMBC Word Logo">
+</div>
         <a href="/dashboard" class="sidebar-link active">Dashboard</a>
+        
         <a href="/stock" class = "sidebar-link"> Inventory</a>
-        <a href="/restock" class="sidebar-link">Restock</a>
-        <a href="#" class="sidebar-link">Transactions</a>
-        <a href="#" class="sidebar-link">Staff</a>
-        <a href="#" class="sidebar-link">Reports</a>
+        <a href="/restock" class="sidebar-link">
+    Restock
+    {% if restock_alerts and restock_alerts > 0 %}
+        <span class="sidebar-badge">{{ restock_alerts }}</span>
+    {% endif %}
+</a>
+        <a href="/transactions" class="sidebar-link">Transactions</a>
+        <a href="/staff" class="sidebar-link">Staff</a>
+        <a href="/reports" class="sidebar-link">Reports</a>
         <a href="/logout" class="sidebar-link logout">Log Out</a>
     </aside>
 
@@ -33,15 +48,15 @@
         </div>
 
         <section class="stat-grid">
-            <div class="stat-card">
-                <p>Items Out</p>
-                <h2>{{ items_out }}</h2>
-            </div>
+           <div class="stat-card">
+    <p>Items Out</p>
+    <h2 class="stat-out">{{ items_out }}</h2>
+</div>
 
-            <div class="stat-card">
-                <p>Low Items</p>
-                <h2>{{ low_items }}</h2>
-            </div>
+<div class="stat-card">
+    <p>Low Items</p>
+    <h2 class="stat-low">{{ low_items }}</h2>
+</div>
 
             <div class="stat-card">
                 <p>Current Staff</p>
@@ -55,37 +70,42 @@
         </section>
 
         <section class="dashboard-grid">
+            <div class = "panel-scroll">
             <div class="panel">
-                <div class="panel-header">
-                    <h2>Inventory Distribution</h2>
-                    <span>By category</span>
+                    <div class="panel-header">
+                    <h2>Machine Health</h2>
+                    <span>Stock status distribution</span>
                 </div>
-
+                <a href="/stock" class="bar-row bar-link">
+                <span>Good</span>
                 <div class="bar-row">
-                    <span>School Supplies</span>
-                    <div class="bar-track"><div class="bar-fill" style="width: 75%;"></div></div>
-                    <small>75%</small>
+                    <div class="bar-track">
+                        <div class="bar-fill status-good-fill" style="width: {{ good_percent }}%;"></div>
+                    </div>
+                    <small>{{ items_good }} / {{ total_items }}</small>
                 </div>
-
+                </a>
+                <a href="/restock" class="bar-row bar-link">
+                <span>Low</span>
                 <div class="bar-row">
-                    <span>Hygiene</span>
-                    <div class="bar-track"><div class="bar-fill" style="width: 55%;"></div></div>
-                    <small>55%</small>
+                    <div class="bar-track">
+                        <div class="bar-fill status-low-fill" style="width: {{ low_percent }}%;"></div>
+                    </div>
+                    <small>{{ low_items }} / {{ total_items }}</small>
                 </div>
-
+                </a>
+                
+                <a href="/restock" class="bar-row bar-link">
+                <span>Out</span>
                 <div class="bar-row">
-                    <span>Medicine</span>
-                    <div class="bar-track"><div class="bar-fill" style="width: 40%;"></div></div>
-                    <small>40%</small>
+                    <div class="bar-track">
+                        <div class="bar-fill status-out-fill" style="width: {{ out_percent }}%;"></div>
+                    </div>
+                    <small>{{ items_out }} / {{ total_items }}</small>
                 </div>
-
-                <div class="bar-row">
-                    <span>Tech</span>
-                    <div class="bar-track"><div class="bar-fill" style="width: 30%;"></div></div>
-                    <small>30%</small>
-                </div>
+                </a>
             </div>
-
+            </div>  
             <div class="panel">
                 <div class="panel-header">
                     <h2>System Activity</h2>
@@ -102,7 +122,7 @@
                     <strong>{{ previous_login }}</strong>
                 </div>
 
-                <div class="activity-line">
+                <div class="activity-line2">
                     <span>Machine Status</span>
                     <strong>Operational</strong>
                 </div>
